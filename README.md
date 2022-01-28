@@ -10,13 +10,25 @@
 
 ## Getting Started
 
-Run this single command:
+Run this command:
 
 ```bash
 npx @guidepup/setup
 ```
 
-And you're now ready to get cracking with your screen-reader automation code! 🚀
+And you'll be ready to get cracking with your screen-reader automation code! 🚀
+
+## Usage
+
+For some operating systems, enabling control of screen-readers is tightly controlled.
+
+Depending on the security controls in place, setup might require either UI automation, or manual interaction to complete. Checkout [these guides](https://github.com/guidepup/guidepup/tree/main/guides) if your system requires manual configuration.
+
+If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent interactive prompts.
+
+```bash
+npx @guidepup/setup --ci
+```
 
 ## See Also
 
