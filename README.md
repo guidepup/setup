@@ -48,4 +48,4 @@ Support:
 
 ## License 🐩
 
-[MIT](https://github.com/guidepup/guidepup/blob/main/LICENSE)
+[MIT](https://github.com/guidepup/setup/blob/main/LICENSE)
