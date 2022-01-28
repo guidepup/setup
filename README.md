@@ -24,7 +24,7 @@ For some operating systems, enabling control of screen-readers is tightly contro
 
 Depending on the security controls in place, setup might require either UI automation, or manual interaction to complete. Checkout [these guides](https://github.com/guidepup/guidepup/tree/main/guides) if your system requires manual configuration.
 
-If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent interactive prompts.
+If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent interactive prompts:
 
 ```bash
 npx @guidepup/setup --ci
