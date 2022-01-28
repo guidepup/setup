@@ -1,0 +1,52 @@
+{
+  "name": "@guidepup/setup",
+  "version": "0.1.0",
+  "description": "Setup your environment for screen-reader automation.",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "bin": {
+    "setup": "bin/setup"
+  },
+  "author": "Craig Morten <craig.morten@hotmail.co.uk>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guidepup/setup"
+  },
+  "bugs": {
+    "url": "https://github.com/guidepup/setup/issues"
+  },
+  "homepage": "https://github.com/guidepup/setup",
+  "keywords": [
+    "screen-reader",
+    "accessibility",
+    "a11y",
+    "voiceover"
+  ],
+  "scripts": {
+    "build": "yarn clean && yarn compile",
+    "ci": "yarn clean && yarn lint && yarn build",
+    "clean": "rimraf lib",
+    "compile": "tsc",
+    "dev": "ts-node ./src/index.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "yarn lint --fix",
+    "start": "./bin/setup",
+    "prepublish": "yarn build"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.11",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.4.0",
+    "eslint-config-prettier": "^8.3.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "inquirer": "^8.2.0",
+    "semver": "^7.3.5"
+  }
+}
