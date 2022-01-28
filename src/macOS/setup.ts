@@ -16,9 +16,14 @@ export async function setup(): Promise<void> {
   enableAppleScriptControlSystemDefaults();
   disableSplashScreenSystemDefaults();
 
+  try {
+    updateUserTccDb();
+  } catch (_) {
+    // ignore
+  }
+
   if (!isSipEnabled()) {
     writeDatabaseFile();
-    updateUserTccDb();
     updateSystemTccDb();
 
     return;
