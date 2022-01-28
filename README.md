@@ -16,7 +16,7 @@ Run this command:
 npx @guidepup/setup
 ```
 
-And you'll be ready to get cracking with your screen-reader automation code! 🚀
+And get cracking with your screen-reader automation code! 🦮
 
 ## Usage
 
@@ -32,7 +32,7 @@ npx @guidepup/setup --ci
 
 ## See Also
 
-Check out some of the other Guidepup modules:
+Check out some of the other Guidepup modules 🐕‍🦺
 
 - [`@guidepup/guidepup`](https://github.com/guidepup/guidepup/)
 - [`@guidepup/playwright`](https://github.com/guidepup/guidepup-playwright/)
