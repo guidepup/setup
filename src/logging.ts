@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
-const logInfo = console.info.bind(console);
-const logError = console.error.bind(console);
+export const logInfo = console.info.bind(console);
+export const logError = console.error.bind(console);
 
 export function handleComplete(): never {
   logInfo("");
@@ -18,9 +18,16 @@ export function handleError(err: Error): never {
     message = `${err.name}: ${message}`;
   }
 
+  logError("");
   logError(chalk.bold(chalk.red(`[!] ${chalk.bold(message.toString())}`)));
   logError("");
-  logError(chalk.dim("Unable to complete environment setup"))
+  logError("Unable to complete environment setup");
+  logError("");
+  logError(
+    chalk.dim(
+      "Please refer to https://github.com/guidepup/guidepup/tree/main/guides for guides to manual environment setup"
+    )
+  );
   logError("");
 
   process.exit(1);

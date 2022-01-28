@@ -21,3 +21,5 @@ export const ERR_MACOS_UI_PROMPT_FAILURE =
   "Unable to retrieve user input from prompt";
 export const ERR_MACOS_UI_CONTROL_NOT_CONSENTED =
   "Consent not given for UI control";
+export const ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION =
+  "Unable to setup environment without manual user interaction";
