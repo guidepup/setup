@@ -6,7 +6,7 @@ export function enableAppleScriptControlSystemDefaults(): void {
     execSync(
       "defaults write com.apple.VoiceOver4/default SCREnableAppleScript -bool true"
     );
-  } catch (e) {
+  } catch (_) {
     throw new Error(ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS)
   }
 }

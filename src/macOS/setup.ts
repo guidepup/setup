@@ -3,13 +3,14 @@ import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptContr
 import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDefaults";
 import { isSipEnabled } from "./isSipEnabled";
 import { writeDatabaseFile } from "./writeDatabaseFile";
-import { updateUserTccDb } from "./updateUserTccDb";
-import { updateSystemTccDb } from "./updateSystemTccDb";
+import { updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
 import { askUserToControlUi } from "./askUserToControlUi";
 import { setVoiceOverEnabledViaUi } from "./setVoiceOverEnabledViaUi";
 import { logInfo } from "../logging";
 import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
+
+const isCi = process.argv.includes("--ci");
 
 export async function setup(): Promise<void> {
   checkVersion();
@@ -17,14 +18,15 @@ export async function setup(): Promise<void> {
   disableSplashScreenSystemDefaults();
 
   try {
-    updateUserTccDb();
-  } catch (_) {
-    // ignore
+    updateTccDb();
+  } catch (e) {
+    if (isCi) {
+      throw e;
+    }
   }
 
   if (!isSipEnabled()) {
     writeDatabaseFile();
-    updateSystemTccDb();
 
     return;
   }
@@ -33,7 +35,7 @@ export async function setup(): Promise<void> {
     return;
   }
 
-  if (process.argv.includes("--ci")) {
+  if (isCi) {
     throw new Error(ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION);
   }
 
