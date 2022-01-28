@@ -63,6 +63,6 @@ const entries: string[] = [
 export function updateTccDb(path: string): void {
   for (const values of entries) {
     const query = `INSERT OR IGNORE INTO access VALUES(${values});`;
-    execSync(`sudo sqlite3 "${path}" "${query}"`);
+    execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`);
   }
 }
