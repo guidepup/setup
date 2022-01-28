@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import { ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../errors";
 
 const epoch = +Date.now();
 
@@ -60,9 +61,16 @@ const entries: string[] = [
   `'kTCCServiceBluetoothAlways','com.apple.VoiceOver',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
 ];
 
-export function updateTccDb(path: string): void {
+const path = "$HOME/Library/Application Support/com.apple.TCC/TCC.db";
+
+export function updateTccDb(): void {
   for (const values of entries) {
     const query = `INSERT OR IGNORE INTO access VALUES(${values});`;
-    execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`);
+
+    try {
+      execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`);
+    } catch (_) {
+      throw new Error(ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB);
+    }
   }
 }

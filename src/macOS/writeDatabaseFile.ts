@@ -7,7 +7,7 @@ export function writeDatabaseFile(): void {
       "/private/var/db/Accessibility/.VoiceOverAppleScriptEnabled",
       "a"
     );
-  } catch (e) {
+  } catch (_) {
     throw new Error(ERR_MACOS_UNABLE_TO_WRITE_DATABASE_FILE)
   }
 }

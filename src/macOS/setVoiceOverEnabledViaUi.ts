@@ -95,7 +95,7 @@ tell application "VoiceOver Utility" to quit
 
   try {
     await runAppleScript(script);
-  } catch (e) {
+  } catch (_) {
     throw new Error(ERR_MACOS_UNABLE_TO_UPDATE_UI_PREFERENCES);
   }
 }

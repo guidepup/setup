@@ -6,7 +6,7 @@ export function isSipEnabled(): boolean {
 
   try {
     commandResult = execSync("csrutil status", { encoding: "utf8" });
-  } catch (e) {
+  } catch (_) {
     throw new Error(ERR_MACOS_UNABLE_TO_VERIFY_SIP)
   }
 
