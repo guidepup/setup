@@ -8,7 +8,7 @@
   <a href="https://github.com/guidepup/setup/blob/main/LICENSE"><img alt="Guidepup Setup uses the MIT license" src="https://img.shields.io/github/license/guidepup/setup" /></a>
 </p>
 
-## Getting Started
+## Getting Started 🦮
 
 Run this command:
 
@@ -16,9 +16,9 @@ Run this command:
 npx @guidepup/setup
 ```
 
-And get cracking with your screen-reader automation code! 🦮
+And get cracking with your screen-reader automation code! 🚀
 
-## Usage
+## Usage 🐕‍🦺
 
 For some operating systems, enabling control of screen-readers is tightly controlled.
 
@@ -30,14 +30,14 @@ If you are running this command in CI/CD, it is recommended to add the `--ci` fl
 npx @guidepup/setup --ci
 ```
 
-## See Also
+## See Also 🐶
 
-Check out some of the other Guidepup modules 🐕‍🦺
+Check out some of the other Guidepup modules:
 
 - [`@guidepup/guidepup`](https://github.com/guidepup/guidepup/)
 - [`@guidepup/playwright`](https://github.com/guidepup/guidepup-playwright/)
 
-## Roadmap
+## Roadmap 🐾
 
 Support:
 
@@ -46,6 +46,6 @@ Support:
 - [ ] VoiceOver on iOS
 - [ ] Talkback on Android
 
-## License
+## License 🐩
 
 [MIT](https://github.com/guidepup/guidepup/blob/main/LICENSE)
