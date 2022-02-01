@@ -30,6 +30,13 @@ If you are running this command in CI/CD, it is recommended to add the `--ci` fl
 npx @guidepup/setup --ci
 ```
 
+If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action`](https://github.com/marketplace/actions/guidepup-setup):
+
+```yaml
+- name: Setup Environment
+  uses: guidepup/setup-action@0.1.2
+```
+
 ## See Also 🐶
 
 Check out some of the other Guidepup modules:
