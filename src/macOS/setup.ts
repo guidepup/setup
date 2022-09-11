@@ -1,6 +1,7 @@
 import { checkVersion } from "./checkVersion";
 import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptControlSystemDefaults";
 import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDefaults";
+import { disableDictationInputAutoEnable } from "./disableDictationInputAutoEnable";
 import { isSipEnabled } from "./isSipEnabled";
 import { writeDatabaseFile } from "./writeDatabaseFile";
 import { updateTccDb } from "./updateTccDb";
@@ -16,6 +17,7 @@ export async function setup(): Promise<void> {
   checkVersion();
   enableAppleScriptControlSystemDefaults();
   disableSplashScreenSystemDefaults();
+  disableDictationInputAutoEnable();
 
   try {
     updateTccDb();
