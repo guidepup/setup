@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "build": "yarn clean && yarn compile",
-    "ci": "yarn clean && yarn lint && yarn build",
+    "ci": "yarn clean && yarn lint && yarn build && yarn start --ci",
     "clean": "rimraf lib",
     "compile": "tsc",
     "dev": "ts-node ./src/index.ts",

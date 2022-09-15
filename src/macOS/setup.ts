@@ -10,6 +10,7 @@ import { askUserToControlUi } from "./askUserToControlUi";
 import { setVoiceOverEnabledViaUi } from "./setVoiceOverEnabledViaUi";
 import { logInfo } from "../logging";
 import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
+import { enableDoNotDisturb } from "./enableDoNotDisturb";
 
 const isCi = process.argv.includes("--ci");
 
@@ -25,6 +26,10 @@ export async function setup(): Promise<void> {
     if (isCi) {
       throw e;
     }
+  }
+
+  if (isCi) {
+    await enableDoNotDisturb();
   }
 
   if (!isSipEnabled()) {
