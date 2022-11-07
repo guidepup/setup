@@ -14,9 +14,12 @@ import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { record } from "./record";
 
 const isCi = process.argv.includes("--ci");
+const isRecorded = process.argv.includes("--record");
 
 export async function setup(): Promise<void> {
-  const stopRecording = record(`./recordings/macos-setup-${+new Date()}.mov`);
+  const stopRecording = isRecorded
+    ? record(`./recordings/macos-setup-${+new Date()}.mov`)
+    : () => null;
 
   try {
     checkVersion();
@@ -33,7 +36,7 @@ export async function setup(): Promise<void> {
     }
 
     if (isCi) {
-      await enableDoNotDisturb();
+    await enableDoNotDisturb();
     }
 
     if (!isSipEnabled()) {

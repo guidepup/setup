@@ -7,7 +7,29 @@ export async function runAppleScript<T = string | void>(
   script: string,
   { timeout = DEFAULT_TIMEOUT } = { timeout: DEFAULT_TIMEOUT }
 ): Promise<T> {
-  const scriptWithTimeout = `with timeout of ${timeout} seconds\n${script}\nend timeout`;
+  const scriptWithTimeout = `
+with timeout of ${timeout} seconds
+  ${script}
+end timeout
+
+on withTimeout(uiScript, timeoutSeconds)
+	set endDate to (current date) + timeoutSeconds
+	repeat
+		try
+			run script "tell application \\"System Events\\"
+" & uiScript & "
+end tell"
+			exit repeat
+		on error errorMessage
+			if ((current date) > endDate) then
+				error errorMessage & "\n\nFor script: " & uiScript
+			end if
+		end try
+		
+		delay 0.2
+	end repeat
+end doWithTimeout
+`;
 
   return (await new Promise<string | void>((resolve, reject) => {
     const child = execFile(

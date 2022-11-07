@@ -37,6 +37,10 @@ If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action
   uses: guidepup/setup-action@0.4.0
 ```
 
+## Debugging
+
+If you are encountering errors in CI you can pass a `--record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory.
+
 ## See Also 🐶
 
 Check out some of the other Guidepup modules:
