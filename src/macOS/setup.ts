@@ -36,7 +36,7 @@ export async function setup(): Promise<void> {
     }
 
     if (isCi) {
-    await enableDoNotDisturb();
+      await enableDoNotDisturb();
     }
 
     if (!isSipEnabled()) {
