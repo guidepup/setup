@@ -47,6 +47,7 @@
   "dependencies": {
     "chalk": "^4.0.0",
     "inquirer": "^8.2.0",
+    "regedit": "^5.1.1",
     "semver": "^7.3.5"
   }
 }
