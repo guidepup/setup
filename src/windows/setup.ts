@@ -1,9 +1,9 @@
-import { readFileSync } from "fs";
 import { promisified as regedit } from "regedit";
 
-const SUB_KEY_GUIDEPUP_NVDA = "HKCU\\Software\\Guidepup\\Nvda";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version } = require("../../package.json");
 
-const { version } = JSON.parse(readFileSync("../../package.json", "utf8"));
+const SUB_KEY_GUIDEPUP_NVDA = "HKCU\\Software\\Guidepup\\Nvda";
 
 export async function setup(): Promise<void> {
   // TODO: Check if have Guidepup's Portable NVDA installed
