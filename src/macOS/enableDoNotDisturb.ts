@@ -51,7 +51,6 @@ export async function enableDoNotDisturb() {
     try {
       await runAppleScript(enableFocusModeAppleScript);
     } catch (e) {
-      console.error(e);
       throw new Error(ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB);
     }
   }
