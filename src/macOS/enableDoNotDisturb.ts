@@ -12,36 +12,29 @@ killall usernoted && killall ControlCenter
 
 // source https://www.reddit.com/r/applescript/comments/r9nnil/enable_do_not_disturb_on_monterey/
 const enableFocusModeAppleScript = `
-tell application "System Preferences"
-  activate
-end tell
+set timeoutSeconds to 5.0
 
-tell application "System Events"
-  tell process "System Preferences"
-    repeat 25 times
-      if (exists window "System Preferences") then
-        click button "Notifications\n& Focus" of scroll area 1 of window "System Preferences"
-        repeat 25 times
-          if (exists window "Notifications & Focus") then
-            click radio button "Focus" of tab group 1 of window "Notifications & Focus"
-            set focusSwitch to checkbox 1 of group 1 of tab group 1 of window "Notifications & Focus"
-            tell focusSwitch
-              if not (its value as boolean) then click focusSwitch
-            end tell
-            tell application "System Preferences"
-              quit
-            end tell
-            return
-          end if
-          delay 0.2
-        end repeat
-        error number 1
-      end if
-      delay 0.2
-    end repeat
-    error number 1
-  end tell
-end tell
+set openSystemPreferences to "tell application \\"System Preferences\\" to activate"
+
+set clickNotificationAndFocusButton to "click UI Element \\"Notifications
+& Focus\\" of scroll area 1 of window \\"System Preferences\\" of application process \\"System Preferences\\""
+
+set clickFocusTab to "click radio button \\"Focus\\" of tab group 1 of window \\"Notifications & Focus\\" of application process \\"System Preferences\\""
+
+set enableDoNotDisturb to "
+set doNotDisturbToggle to checkbox 1 of group 1 of tab group 1 of window \\"Notifications & Focus\\" of application process \\"System Preferences\\"
+
+tell doNotDisturbToggle
+  if not (its value as boolean) then click doNotDisturbToggle
+end tell"
+
+set closeSystemPreferences to "tell application \\"System Preferences\\" to quit"
+
+my withTimeout(openSystemPreferences, timeoutSeconds)
+my withTimeout(clickNotificationAndFocusButton, timeoutSeconds)
+my withTimeout(clickFocusTab, timeoutSeconds)
+my withTimeout(enableDoNotDisturb, timeoutSeconds)
+my withTimeout(closeSystemPreferences, timeoutSeconds)
 `;
 
 export async function enableDoNotDisturb() {
@@ -57,7 +50,7 @@ export async function enableDoNotDisturb() {
     // From MacOS 12 Monterey (Darwin 21) there is no known way to enable DND via system defaults
     try {
       await runAppleScript(enableFocusModeAppleScript);
-    } catch (_) {
+    } catch (e) {
       throw new Error(ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB);
     }
   }

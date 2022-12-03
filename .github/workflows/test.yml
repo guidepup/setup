@@ -21,3 +21,9 @@ jobs:
           node-version: 16
       - run: yarn install --frozen-lockfile
       - run: yarn ci
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: artifacts
+          path: |
+            **/recordings/**/*
