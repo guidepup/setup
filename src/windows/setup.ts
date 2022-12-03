@@ -1,7 +1,9 @@
+import { readFileSync } from "fs";
 import { promisified as regedit } from "regedit";
-import { version } from "../../package.json";
 
 const SUB_KEY_GUIDEPUP_NVDA = "HKCU\\Software\\Guidepup\\Nvda";
+
+const { version } = JSON.parse(readFileSync("../../package.json", "utf8"));
 
 export async function setup(): Promise<void> {
   // TODO: Check if have Guidepup's Portable NVDA installed
