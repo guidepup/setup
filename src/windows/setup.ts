@@ -1,13 +1,31 @@
 import { promisified as regedit } from "regedit";
+import { version } from "../../package.json";
 
 const SUB_KEY_GUIDEPUP_NVDA = "HKCU\\Software\\Guidepup\\Nvda";
 
 export async function setup(): Promise<void> {
-  // Check if have Guidepup's Portable NVDA installed
-  const listResult = await regedit.list([SUB_KEY_GUIDEPUP_NVDA]);
-  console.log(listResult);
+  // TODO: Check if have Guidepup's Portable NVDA installed
+  const {
+    [SUB_KEY_GUIDEPUP_NVDA]: { exists },
+  } = await regedit.list([SUB_KEY_GUIDEPUP_NVDA]);
 
-  // Fetch Guidepup's Portable NVDA installed
+  if (!exists) {
+    await regedit.createKey([SUB_KEY_GUIDEPUP_NVDA]);
+  }
 
-  // Create / update registry with Guidepup's Portable NVDA installation location
+  // TODO: Fetch Guidepup's Portable NVDA installed
+
+  // TODO: Create / update registry with Guidepup's Portable NVDA installation location
+  const versionedKey = `guidepup_nvda_${version}`;
+
+  await regedit.putValue({
+    [SUB_KEY_GUIDEPUP_NVDA]: {
+      [versionedKey]: {
+        value: "path\\to\\nvda.exe",
+        type: "REG_SZ",
+      },
+    },
+  });
+
+  console.log(await regedit.list([SUB_KEY_GUIDEPUP_NVDA]));
 }
