@@ -31,7 +31,7 @@
     "dev": "ts-node ./src/index.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "yarn lint --fix",
-    "start": "./bin/setup",
+    "start": "node ./bin/setup",
     "prepublish": "yarn build"
   },
   "devDependencies": {
