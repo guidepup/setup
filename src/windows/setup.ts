@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync, readdir } from "fs";
 import { promisified as regedit } from "regedit";
 import { downloadNvda } from "./downloadNvda";
 
@@ -35,14 +35,14 @@ export async function setup(): Promise<void> {
     await regedit.createKey([SUB_KEY_GUIDEPUP_NVDA]);
   }
 
-  const pathToNvda = await downloadNvda();
+  const nvdaDirectory = await downloadNvda();
 
-  console.log({ pathToNvda });
+  console.log({ nvdaDirectory });
 
   await regedit.putValue({
     [SUB_KEY_GUIDEPUP_NVDA]: {
       [VERSIONED_KEY]: {
-        value: pathToNvda,
+        value: nvdaDirectory,
         type: "REG_SZ",
       },
     },
@@ -53,4 +53,14 @@ export async function setup(): Promise<void> {
   ]);
 
   console.log(JSON.stringify(results, undefined, 2));
+
+  readdir(nvdaDirectory, function (err, files) {
+    if (err) {
+      return console.error(err);
+    }
+
+    files.forEach(function (file) {
+      console.log(file);
+    });
+  });
 }
