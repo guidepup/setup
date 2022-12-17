@@ -14,13 +14,9 @@ export async function downloadNvda(): Promise<string> {
   const destinationDirectory = join(destinationBaseDirectory, "guidepup_nvda");
   const fileZip = createWriteStream(destinationZip);
 
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     function onResponse(response) {
       response.pipe(fileZip);
-    }
-
-    function onSuccess() {
-      fileZip.close(resolve);
     }
 
     function onError(error) {
@@ -29,13 +25,27 @@ export async function downloadNvda(): Promise<string> {
       reject(new Error(ERR_WINDOWS_FAILED_TO_INSTALL_NVDA));
     }
 
+    function onSuccess() {
+      fileZip.close((err) => {
+        if (err) {
+          return onError(err);
+        }
+
+        resolve();
+      });
+    }
+
     const request = get(sourceUrl, onResponse);
     fileZip.on("finish", onSuccess);
     request.on("error", onError);
     fileZip.on("error", onError);
   });
 
-  console.log({ destinationBaseDirectory, destinationZip, destinationDirectory });
+  console.log({
+    destinationBaseDirectory,
+    destinationZip,
+    destinationDirectory,
+  });
 
   try {
     await extract(destinationZip, { dir: destinationDirectory });
