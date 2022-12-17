@@ -8,6 +8,8 @@ import extract from "extract-zip";
 const sourceUrl =
   "https://github.com/guidepup/setup/raw/feat/add-nvda-setup/downloads/guidepup_nvda.zip";
 
+const tenMinutesInMs = 10 * 60 * 1000;
+
 export async function downloadNvda(): Promise<string> {
   const destinationBaseDirectory = mkdtempSync(join(tmpdir(), "guidepup_nvda"));
   const destinationZip = join(destinationBaseDirectory, "guidepup_nvda.zip");
@@ -16,6 +18,7 @@ export async function downloadNvda(): Promise<string> {
 
   await new Promise<void>((resolve, reject) => {
     function onResponse(response) {
+      response.setTimeout(tenMinutesInMs);
       response.pipe(fileZip);
     }
 
