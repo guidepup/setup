@@ -981,10 +981,10 @@ readable-stream@^3.4.0:
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
-regedit@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/regedit/-/regedit-5.1.1.tgz#4ee55c00fc97f1dc365504953ea0570fb6dd8687"
-  integrity sha512-NJ2OZ14czryt3RiQyMM/nptaiu0bF1CT+YVw0PBziMrLJyq8pdmIAvupi9E+NPWJLDJtyHDoKs5g5wcbP8ANIg==
+regedit@5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/regedit/-/regedit-5.0.1.tgz#e55cf93fc70133d6d4ba849a2d4ead22a5075220"
+  integrity sha512-DiFTHk51G5d8bTAYGRDbHNJJPzg8EOF+3pNPdYjDc6kXOgObfayrVnjwfTseyzeIh5sVa+nhHkkVpmopUnOAQQ==
   dependencies:
     debug "^4.1.0"
     if-async "^3.7.4"
