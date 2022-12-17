@@ -23,3 +23,5 @@ export const ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION =
   "Unable to setup environment without manual user interaction";
 export const ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB =
   'Failed to enable "Do not disturb" mode';
+
+export const ERR_WINDOWS_FAILED_TO_INSTALL_NVDA = "Unable to install NVDA";

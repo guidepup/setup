@@ -1,5 +1,6 @@
 import { existsSync } from "fs";
 import { promisified as regedit } from "regedit";
+import { downloadNvda } from "./downloadNvda";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../../package.json");
@@ -34,14 +35,22 @@ export async function setup(): Promise<void> {
     await regedit.createKey([SUB_KEY_GUIDEPUP_NVDA]);
   }
 
-  // TODO: Fetch Guidepup's Portable NVDA installed
+  const pathToNvda = await downloadNvda();
+
+  console.log({ pathToNvda });
 
   await regedit.putValue({
     [SUB_KEY_GUIDEPUP_NVDA]: {
       [VERSIONED_KEY]: {
-        value: "path\\to\\nvda.exe",
+        value: pathToNvda,
         type: "REG_SZ",
       },
     },
   });
+
+  const { [SUB_KEY_GUIDEPUP_NVDA]: results } = await regedit.list([
+    SUB_KEY_GUIDEPUP_NVDA,
+  ]);
+
+  console.log(JSON.stringify(results, undefined, 2));
 }
