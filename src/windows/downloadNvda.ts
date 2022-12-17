@@ -23,8 +23,9 @@ export async function downloadNvda(): Promise<string> {
       fileZip.close(resolve);
     }
 
-    function onError() {
+    function onError(error) {
       rmSync(destinationBaseDirectory, { recursive: true });
+      console.error(error);
       reject(new Error(ERR_WINDOWS_FAILED_TO_INSTALL_NVDA));
     }
 
@@ -36,7 +37,8 @@ export async function downloadNvda(): Promise<string> {
 
   try {
     await extract(destinationZip, { dir: destinationDirectory });
-  } catch {
+  } catch (error) {
+    console.error(error);
     rmSync(destinationBaseDirectory, { recursive: true });
     throw new Error(ERR_WINDOWS_FAILED_TO_INSTALL_NVDA);
   }
