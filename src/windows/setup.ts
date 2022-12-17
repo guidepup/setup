@@ -1,37 +1,47 @@
+import { existsSync } from "fs";
 import { promisified as regedit } from "regedit";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../../package.json");
 
 const SUB_KEY_GUIDEPUP_NVDA = "HKCU\\Software\\Guidepup\\Nvda";
+const VERSIONED_KEY = `guidepup_nvda_${version}`;
+
+function isInstalled({ exists, values }) {
+  if (!exists) {
+    return false;
+  }
+
+  const path = values[VERSIONED_KEY]?.value;
+
+  if (!path) {
+    return false;
+  }
+
+  return existsSync(path);
+}
 
 export async function setup(): Promise<void> {
-  // TODO: Check if have Guidepup's Portable NVDA installed
   const {
-    [SUB_KEY_GUIDEPUP_NVDA]: { exists, values, keys },
+    [SUB_KEY_GUIDEPUP_NVDA]: { exists, values },
   } = await regedit.list([SUB_KEY_GUIDEPUP_NVDA]);
 
-  console.log({ exists, values, keys });
+  if (isInstalled({ exists, values })) {
+    return;
+  }
 
   if (!exists) {
-    console.log("creating key");
     await regedit.createKey([SUB_KEY_GUIDEPUP_NVDA]);
   }
 
   // TODO: Fetch Guidepup's Portable NVDA installed
 
-  // TODO: Create / update registry with Guidepup's Portable NVDA installation location
-  const versionedKey = `guidepup_nvda_${version}`;
-  console.log({ versionedKey });
-
   await regedit.putValue({
     [SUB_KEY_GUIDEPUP_NVDA]: {
-      [versionedKey]: {
+      [VERSIONED_KEY]: {
         value: "path\\to\\nvda.exe",
         type: "REG_SZ",
       },
     },
   });
-
-  console.log(await regedit.list([SUB_KEY_GUIDEPUP_NVDA]));
 }
