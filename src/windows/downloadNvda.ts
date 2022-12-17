@@ -35,6 +35,8 @@ export async function downloadNvda(): Promise<string> {
     fileZip.on("error", onError);
   });
 
+  console.log({ destinationBaseDirectory, destinationZip, destinationDirectory });
+
   try {
     await extract(destinationZip, { dir: destinationDirectory });
   } catch (error) {
