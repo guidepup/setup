@@ -1,18 +1,18 @@
 import type { IncomingMessage } from "http";
+import decompress from "decompress";
 import { get } from "https";
 import { createWriteStream, mkdtempSync, rmSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
 import { ERR_WINDOWS_FAILED_TO_INSTALL_NVDA } from "../errors";
-import decompress from "decompress";
 
-const sourceUrl =
-  "https://raw.githubusercontent.com/guidepup/setup/feat/add-nvda-setup/downloads/guidepup_nvda.zip";
+const appName = "guidepup_nvda";
+const sourceUrl = `https://raw.githubusercontent.com/guidepup/setup/feat/add-nvda-setup/downloads/${appName}.zip`;
 
 export async function installNvda(): Promise<string> {
-  const destinationBaseDirectory = mkdtempSync(join(tmpdir(), "guidepup_nvda"));
-  const destinationDirectory = join(destinationBaseDirectory, "guidepup_nvda");
-  const destinationZip = join(destinationBaseDirectory, "guidepup_nvda.zip");
+  const destinationBaseDirectory = mkdtempSync(join(tmpdir(), `${appName}_`));
+  const destinationDirectory = join(destinationBaseDirectory, appName);
+  const destinationZip = join(destinationBaseDirectory, `${appName}.zip`);
   const fileZip = createWriteStream(destinationZip);
 
   function removeAll() {
