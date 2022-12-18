@@ -1,4 +1,4 @@
-import { existsSync, readdir } from "fs";
+import { existsSync, readdir, readdirSync } from "fs";
 import { promisified as regedit } from "regedit";
 import { downloadNvda } from "./downloadNvda";
 
@@ -54,13 +54,6 @@ export async function setup(): Promise<void> {
 
   console.log(JSON.stringify(results, undefined, 2));
 
-  readdir(nvdaDirectory, function (err, files) {
-    if (err) {
-      return console.error(err);
-    }
-
-    files.forEach(function (file) {
-      console.log(file);
-    });
-  });
+  const files = readdirSync(nvdaDirectory);
+  console.log(files);
 }
