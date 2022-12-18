@@ -37,9 +37,13 @@ If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action
   uses: guidepup/setup-action@0.4.0
 ```
 
-## Debugging
+## Recording
 
 If you are encountering errors in CI for MacOS you can pass a `--record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory.
+
+## NVDA Installation
+
+When running on windows a portable NVDA instance compatible with Guidepup will be installed to a temporary directory. The location of this installation directory is stored in the Windows registry under the key `HKCU\Software\Guidepup\Nvda`.
 
 ## See Also 🐶
 
@@ -53,7 +57,7 @@ Check out some of the other Guidepup modules:
 Support:
 
 - [x] VoiceOver on MacOS
-- [ ] NVDA on Windows
+- [x] NVDA on Windows
 - [ ] VoiceOver on iOS
 - [ ] Talkback on Android
 
