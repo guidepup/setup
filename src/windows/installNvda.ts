@@ -1,4 +1,3 @@
-import type { IncomingMessage } from "http";
 import decompress from "decompress";
 import { get } from "https";
 import { createWriteStream, mkdtempSync, rmSync } from "fs";
@@ -16,40 +15,39 @@ export async function installNvda(): Promise<string> {
   const fileZip = createWriteStream(destinationZip);
 
   function removeAll() {
-    rmSync(destinationBaseDirectory, { recursive: true });
+    try {
+      rmSync(destinationBaseDirectory, { recursive: true });
+    } catch {
+      // swallow
+    }
   }
 
   function removeZip() {
-    rmSync(destinationZip, { recursive: true });
+    try {
+      rmSync(destinationZip, { recursive: true });
+    } catch {
+      // swallow
+    }
   }
 
-  await new Promise<void>((resolve, reject) => {
-    function onResponse(response: IncomingMessage) {
-      response.pipe(fileZip);
-    }
-
-    function onError() {
-      removeAll();
-      reject(new Error(ERR_WINDOWS_FAILED_TO_INSTALL_NVDA));
-    }
-
-    function onSuccess() {
-      fileZip.close((error) => {
-        if (error) {
-          return onError();
-        }
-
-        resolve();
-      });
-    }
-
-    const request = get(sourceUrl, onResponse);
-    fileZip.on("finish", onSuccess);
-    request.on("error", onError);
-    fileZip.on("error", onError);
-  });
-
   try {
+    await new Promise<void>((resolve, reject) => {
+      function onSuccess() {
+        fileZip.close((error) => {
+          if (error) {
+            return reject(error);
+          }
+
+          resolve();
+        });
+      }
+
+      const request = get(sourceUrl, (response) => response.pipe(fileZip));
+      request.on("error", reject);
+      fileZip.on("finish", onSuccess);
+      fileZip.on("error", reject);
+    });
+
     await decompress(destinationZip, destinationBaseDirectory);
 
     removeZip();
