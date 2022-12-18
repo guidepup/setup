@@ -25,13 +25,14 @@
   ],
   "scripts": {
     "build": "yarn clean && yarn compile",
-    "ci": "yarn clean && yarn lint && yarn build && yarn start --ci --record",
+    "ci": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record",
     "clean": "rimraf lib",
     "compile": "tsc",
     "dev": "ts-node ./src/index.ts",
+    "resolutionFix": "ts-node ./.github/workflows/resolutionFix.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "yarn lint --fix",
-    "start": "./bin/setup",
+    "start": "node ./bin/setup",
     "prepublish": "yarn build"
   },
   "devDependencies": {
@@ -46,7 +47,9 @@
   },
   "dependencies": {
     "chalk": "^4.0.0",
+    "decompress": "^4.2.1",
     "inquirer": "^8.2.0",
+    "regedit": "5.0.1",
     "semver": "^7.3.5"
   }
 }
