@@ -1,3 +1,4 @@
+import type { IncomingMessage } from "http";
 import { get } from "https";
 import { createWriteStream, mkdtempSync, rmSync } from "fs";
 import { join } from "path";
@@ -6,32 +7,36 @@ import { ERR_WINDOWS_FAILED_TO_INSTALL_NVDA } from "../errors";
 import decompress from "decompress";
 
 const sourceUrl =
-  "https://github.com/guidepup/setup/raw/feat/add-nvda-setup/downloads/guidepup_nvda.zip";
+  "https://raw.githubusercontent.com/guidepup/setup/feat/add-nvda-setup/downloads/guidepup_nvda.zip";
 
-const tenMinutesInMs = 10 * 60 * 1000;
-
-export async function downloadNvda(): Promise<string> {
+export async function installNvda(): Promise<string> {
   const destinationBaseDirectory = mkdtempSync(join(tmpdir(), "guidepup_nvda"));
-  const destinationZip = join(destinationBaseDirectory, "guidepup_nvda.zip");
   const destinationDirectory = join(destinationBaseDirectory, "guidepup_nvda");
+  const destinationZip = join(destinationBaseDirectory, "guidepup_nvda.zip");
   const fileZip = createWriteStream(destinationZip);
 
+  function removeAll() {
+    rmSync(destinationBaseDirectory, { recursive: true });
+  }
+
+  function removeZip() {
+    rmSync(destinationZip, { recursive: true });
+  }
+
   await new Promise<void>((resolve, reject) => {
-    function onResponse(response) {
-      response.setTimeout(tenMinutesInMs);
+    function onResponse(response: IncomingMessage) {
       response.pipe(fileZip);
     }
 
-    function onError(error) {
-      rmSync(destinationBaseDirectory, { recursive: true });
-      console.error(error);
+    function onError() {
+      removeAll();
       reject(new Error(ERR_WINDOWS_FAILED_TO_INSTALL_NVDA));
     }
 
     function onSuccess() {
-      fileZip.close((err) => {
-        if (err) {
-          return onError(err);
+      fileZip.close((error) => {
+        if (error) {
+          return onError();
         }
 
         resolve();
@@ -44,17 +49,13 @@ export async function downloadNvda(): Promise<string> {
     fileZip.on("error", onError);
   });
 
-  console.log({
-    destinationBaseDirectory,
-    destinationZip,
-    destinationDirectory,
-  });
-
   try {
-    await decompress(destinationZip, destinationDirectory);
-  } catch (error) {
-    console.error(error);
-    rmSync(destinationBaseDirectory, { recursive: true });
+    await decompress(destinationZip, destinationBaseDirectory);
+
+    removeZip();
+  } catch {
+    removeAll();
+
     throw new Error(ERR_WINDOWS_FAILED_TO_INSTALL_NVDA);
   }
 

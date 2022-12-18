@@ -1,6 +1,6 @@
-import { existsSync, readdir, readdirSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import { promisified as regedit } from "regedit";
-import { downloadNvda } from "./downloadNvda";
+import { installNvda } from "./installNvda";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../../package.json");
@@ -35,9 +35,7 @@ export async function setup(): Promise<void> {
     await regedit.createKey([SUB_KEY_GUIDEPUP_NVDA]);
   }
 
-  const nvdaDirectory = await downloadNvda();
-
-  console.log({ nvdaDirectory });
+  const nvdaDirectory = await installNvda();
 
   await regedit.putValue({
     [SUB_KEY_GUIDEPUP_NVDA]: {
