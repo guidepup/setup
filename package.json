@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "chalk": "^4.0.0",
-    "extract-zip": "^2.0.1",
+    "decompress": "^4.2.1",
     "inquirer": "^8.2.0",
     "regedit": "5.0.1",
     "semver": "^7.3.5"

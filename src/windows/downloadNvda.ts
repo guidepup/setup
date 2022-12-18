@@ -3,7 +3,7 @@ import { createWriteStream, mkdtempSync, rmSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
 import { ERR_WINDOWS_FAILED_TO_INSTALL_NVDA } from "../errors";
-import extract from "extract-zip";
+import decompress from "decompress";
 
 const sourceUrl =
   "https://github.com/guidepup/setup/raw/feat/add-nvda-setup/downloads/guidepup_nvda.zip";
@@ -51,7 +51,7 @@ export async function downloadNvda(): Promise<string> {
   });
 
   try {
-    await extract(destinationZip, { dir: destinationDirectory });
+    await decompress(destinationZip, destinationDirectory);
   } catch (error) {
     console.error(error);
     rmSync(destinationBaseDirectory, { recursive: true });
