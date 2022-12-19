@@ -1,7 +1,7 @@
 import decompress from "decompress";
 import { get } from "https";
 import { createWriteStream, mkdtempSync, rmSync } from "fs";
-import { join, resolve } from "path";
+import { join } from "path";
 import { tmpdir } from "os";
 import { ERR_WINDOWS_FAILED_TO_INSTALL_NVDA } from "../errors";
 
