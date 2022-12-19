@@ -1,6 +1,6 @@
 {
   "name": "@guidepup/setup",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Setup your environment for screen-reader automation.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -21,7 +21,8 @@
     "screen-reader",
     "accessibility",
     "a11y",
-    "voiceover"
+    "voiceover",
+    "nvda"
   ],
   "scripts": {
     "build": "yarn clean && yarn compile",
