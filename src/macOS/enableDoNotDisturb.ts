@@ -15,7 +15,7 @@ set timeoutSeconds to 5.0
 
 set openSystemPreferences to "tell application \\"System Preferences\\" to activate"
 
-set clickNotificationAndFocusButton to "click UI Element 8 of scroll area 1 of window \\"System Preferences\\" of application process \\"System Preferences\\""
+set clickNotificationAndFocusButton to "click UI Element 9 of scroll area 1 of window \\"System Preferences\\" of application process \\"System Preferences\\""
 
 set clickFocusTab to "click radio button \\"Focus\\" of tab group 1 of window \\"Notifications & Focus\\" of application process \\"System Preferences\\""
 
