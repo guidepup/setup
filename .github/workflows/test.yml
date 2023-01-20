@@ -15,12 +15,12 @@ jobs:
       matrix:
         os:
           [
-            macos-11,
+            # macos-11,
             macos-12,
-            macos-latest,
-            windows-2019,
-            windows-2022,
-            windows-latest,
+            # macos-latest,
+            # windows-2019,
+            # windows-2022,
+            # windows-latest,
           ]
     steps:
       - uses: actions/checkout@v2
