@@ -13,11 +13,7 @@ killall usernoted && killall ControlCenter
 const enableFocusModeAppleScript = `
 set timeoutSeconds to 5.0
 
-set openSystemPreferences to "tell application \\"System Preferences\\" to activate"
-
-set clickNotificationAndFocusButton to "click UI Element 1 of scroll area 1 of window \\"System Preferences\\" of application process \\"System Preferences\\""
-
-set clickFocusTab to "click radio button \\"Focus\\" of tab group 1 of window \\"Notifications & Focus\\" of application process \\"System Preferences\\""
+set openPreferences to "do shell script \\"open 'x-apple.systempreferences:com.apple.preference.notifications?focus'\\""
 
 set enableDoNotDisturb to "
 set doNotDisturbToggle to checkbox 1 of group 1 of tab group 1 of window \\"Notifications & Focus\\" of application process \\"System Preferences\\"
@@ -28,9 +24,7 @@ end tell"
 
 set closeSystemPreferences to "tell application \\"System Preferences\\" to quit"
 
-my withTimeout(openSystemPreferences, timeoutSeconds)
-my withTimeout(clickNotificationAndFocusButton, timeoutSeconds)
-my withTimeout(clickFocusTab, timeoutSeconds)
+my withTimeout(openPreferences, timeoutSeconds)
 my withTimeout(enableDoNotDisturb, timeoutSeconds)
 my withTimeout(closeSystemPreferences, timeoutSeconds)
 `;
