@@ -17,6 +17,14 @@ const isCi = process.argv.includes("--ci");
 const isRecorded = process.argv.includes("--record");
 
 export async function setup(): Promise<void> {
+  try {
+    updateTccDb();
+  } catch (e) {
+    if (isCi) {
+      throw e;
+    }
+  }
+
   const stopRecording = isRecorded
     ? record(`./recordings/macos-setup-${+new Date()}.mov`)
     : () => null;
@@ -26,14 +34,6 @@ export async function setup(): Promise<void> {
     enableAppleScriptControlSystemDefaults();
     disableSplashScreenSystemDefaults();
     disableDictationInputAutoEnable();
-
-    try {
-      updateTccDb();
-    } catch (e) {
-      if (isCi) {
-        throw e;
-      }
-    }
 
     if (isCi) {
       await enableDoNotDisturb();
