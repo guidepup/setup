@@ -1,6 +1,6 @@
 <h1 align="center">Guidepup Setup</h1>
 <p align="center">
-  <i>Setup your environment for screen-reader automation.</i>
+  <i>Setup your environment for screen reader test automation.</i>
 </p>
 <p align="center">
   <a href="https://www.npmjs.com/package/@guidepup/setup"><img alt="Guidepup Setup available on NPM" src="https://img.shields.io/npm/v/@guidepup/setup" /></a>
@@ -16,11 +16,11 @@ Run this command:
 npx @guidepup/setup
 ```
 
-And get cracking with your screen-reader automation code!
+And get cracking with your screen reader test automation code!
 
 ## Usage
 
-For some operating systems, enabling control of screen-readers is tightly controlled.
+For some operating systems, enabling control of screen readers is tightly controlled.
 
 Depending on the security controls in place, setup might require either UI automation, or manual interaction to complete. Checkout [these guides](https://github.com/guidepup/guidepup/tree/main/guides) if your system requires manual configuration.
 
