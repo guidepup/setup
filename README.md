@@ -56,10 +56,8 @@ Check out some of the other Guidepup modules:
 
 Support:
 
-- [x] VoiceOver on MacOS
-- [x] NVDA on Windows
-- [ ] VoiceOver on iOS
-- [ ] Talkback on Android
+- VoiceOver on MacOS
+- NVDA on Windows
 
 ## License
 
