@@ -12,7 +12,7 @@
 
 Run this command:
 
-```bash
+```console
 npx @guidepup/setup
 ```
 
@@ -20,13 +20,9 @@ And get cracking with your screen reader test automation code!
 
 ## Usage
 
-For some operating systems, enabling control of screen readers is tightly controlled.
-
-Depending on the security controls in place, setup might require either UI automation, or manual interaction to complete. Checkout [these guides](https://github.com/guidepup/guidepup/tree/main/guides) if your system requires manual configuration.
-
 If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent interactive prompts:
 
-```bash
+```console
 npx @guidepup/setup --ci
 ```
 
@@ -34,12 +30,16 @@ If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action
 
 ```yaml
 - name: Setup Environment
-  uses: guidepup/setup-action@0.6.4
+  uses: guidepup/setup-action@0.8.1
 ```
 
-## Recording
+If you are encountering errors in CI for MacOS you can pass a `--record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory:
 
-If you are encountering errors in CI for MacOS you can pass a `--record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory.
+```console
+npx @guidepup/setup --ci --record
+```
+
+Check out the [Documentation Website](https://www.guidepup.dev/docs/guides/environment) for more information.
 
 ## NVDA Installation
 
@@ -52,9 +52,7 @@ Check out some of the other Guidepup modules:
 - [`@guidepup/guidepup`](https://github.com/guidepup/guidepup/)
 - [`@guidepup/playwright`](https://github.com/guidepup/guidepup-playwright/)
 
-## Roadmap
-
-Support:
+## Support
 
 - VoiceOver on MacOS
 - NVDA on Windows
