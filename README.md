@@ -41,9 +41,24 @@ npx @guidepup/setup --ci --record
 
 Check out the [Documentation Website](https://www.guidepup.dev/docs/guides/environment) for more information.
 
-## NVDA Installation
+## Windows
+
+### NVDA Installation
 
 When running on windows a portable NVDA instance compatible with Guidepup will be installed to a temporary directory. The location of this installation directory is stored in the Windows registry under the key `HKCU\Software\Guidepup\Nvda`.
+
+### Foreground Timeout Lock
+
+Modern versions of Windows have a setting which prevents new application instances launching in front of other applications in quick succession, requiring over 3 minutes between activations before it will actually show the window - in the interim it launches the window minimized.
+
+Many test automation frameworks will completely close down a browser after a test has finished and then launch a new instance for the next test - on Windows this suffers from the timeout lock on foreground windows. This impacts on screen reader automation which need the window to activate and focus to be able to drive the screen reader on the application.
+
+To mitigate this the setup script updates two keys in the Windows registry under `HKCU\Control Panel\Desktop`:
+
+- `ForegroundLockTimeout` - Specifies the time in milliseconds, following user input, during which the system will not allow applications to force themselves into the foreground. Defaults to `200000`.
+- `ForegroundFlashCount` - Determines the number of times the taskbar button will flash to notify the user that a background window has been activated by the system. If the time elapsed since the last user input exceeds the value of ForegroundLockTimeout, the window will automatically be brought to the foreground. Defaults to `3`.
+
+Both of these are set to `0` by the setup script.
 
 ## See Also
 
