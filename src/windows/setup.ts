@@ -3,6 +3,8 @@ import { isNvdaInstalled } from "./isNvdaInstalled";
 import { createNvdaRegistryKey } from "./createNvdaRegistryKey";
 import { installNvda } from "./installNvda";
 import { updateNvdaRegistryData } from "./updateNvdaRegistryData";
+import { removeForegroundLock } from "./removeForegroundLock";
+import { restartExplorer } from "./restartExplorer";
 
 export async function setup(): Promise<void> {
   const { exists, values } = await getNvdaRegistryData();
@@ -18,4 +20,6 @@ export async function setup(): Promise<void> {
   const nvdaDirectory = await installNvda();
 
   await updateNvdaRegistryData({ nvdaDirectory });
+  await removeForegroundLock();
+  await restartExplorer();
 }
