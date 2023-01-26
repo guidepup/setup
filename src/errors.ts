@@ -27,3 +27,4 @@ export const ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB =
 export const ERR_WINDOWS_UNABLE_TO_ACCESS_REGISTRY = "Unable to access Windows registry";
 export const ERR_WINDOWS_UNABLE_TO_UPDATE_REGISTRY = "Unable to update Windows registry";
 export const ERR_WINDOWS_FAILED_TO_INSTALL_NVDA = "Unable to install NVDA";
+export const ERR_WINDOWS_FAILED_TO_RESTART_EXPLORER = "Unable to restart explorer.exe";
