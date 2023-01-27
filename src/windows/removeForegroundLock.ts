@@ -24,7 +24,7 @@ export async function removeForegroundLock() {
         },
       },
     });
-  } catch {
-    throw new Error(ERR_WINDOWS_UNABLE_TO_UPDATE_REGISTRY);
+  } catch (e) {
+    throw new Error(`${ERR_WINDOWS_UNABLE_TO_UPDATE_REGISTRY}\n\n${e.message}`);
   }
 }

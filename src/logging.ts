@@ -25,7 +25,8 @@ export function handleError(err: Error): never {
   logError("");
   logError(
     chalk.dim(
-      "Please refer to https://github.com/guidepup/guidepup/tree/main/guides for guides to manual environment setup"
+      "Please raise new issues at: " +
+        chalk.underline("https://github.com/guidepup/setup/issues")
     )
   );
   logError("");

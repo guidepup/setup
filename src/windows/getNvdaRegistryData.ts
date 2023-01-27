@@ -9,7 +9,7 @@ export async function getNvdaRegistryData() {
     } = await regedit.list([SUB_KEY_GUIDEPUP_NVDA]);
 
     return { exists, values };
-  } catch {
-    throw new Error(ERR_WINDOWS_UNABLE_TO_ACCESS_REGISTRY);
+  } catch (e) {
+    throw new Error(`${ERR_WINDOWS_UNABLE_TO_ACCESS_REGISTRY}\n\n${e.message}`);
   }
 }
