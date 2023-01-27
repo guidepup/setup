@@ -192,8 +192,8 @@ export function updateTccDb(): void {
 
     try {
       execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`);
-    } catch (_) {
-      throw new Error(ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB);
+    } catch (e) {
+      throw new Error(`${ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB}\n\n${e.message}`);
     }
   }
 }

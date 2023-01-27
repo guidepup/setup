@@ -21,6 +21,6 @@ SET WshShell = Nothing
   try {
     await runVbsScript(script);
   } catch (e) {
-    throw new Error(`${ERR_WINDOWS_FAILED_TO_RESTART_EXPLORER}\n${e.message}`);
+    throw new Error(`${ERR_WINDOWS_FAILED_TO_RESTART_EXPLORER}\n\n${e.message}`);
   }
 }

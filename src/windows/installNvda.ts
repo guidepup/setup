@@ -51,10 +51,10 @@ export async function installNvda(): Promise<string> {
     await decompress(destinationZip, destinationBaseDirectory);
 
     removeZip();
-  } catch {
+  } catch (e) {
     removeAll();
 
-    throw new Error(ERR_WINDOWS_FAILED_TO_INSTALL_NVDA);
+    throw new Error(`${ERR_WINDOWS_FAILED_TO_INSTALL_NVDA}\n\n${e.message}`);
   }
 
   return destinationDirectory;

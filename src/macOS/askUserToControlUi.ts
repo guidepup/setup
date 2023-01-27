@@ -31,8 +31,8 @@ export async function askUserToControlUi(): Promise<Credentials> {
 
   try {
     consentStatus = await prompt(consent);
-  } catch (_) {
-    throw new Error(ERR_MACOS_UI_PROMPT_FAILURE)
+  } catch (e) {
+    throw new Error(`${ERR_MACOS_UI_PROMPT_FAILURE}\n\n${e.message}`);
   }
 
   if (!consentStatus.confirm) {
@@ -41,7 +41,7 @@ export async function askUserToControlUi(): Promise<Credentials> {
 
   try {
     return await prompt(credentials);
-  } catch (_) {
-    throw new Error(ERR_MACOS_UI_PROMPT_FAILURE)
+  } catch (e) {
+    throw new Error(`${ERR_MACOS_UI_PROMPT_FAILURE}\n\n${e.message}`);
   }
 }
