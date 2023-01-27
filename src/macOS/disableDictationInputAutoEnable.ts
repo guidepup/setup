@@ -6,7 +6,7 @@ export function disableDictationInputAutoEnable(): void {
     execSync(
       "defaults write com.apple.HIToolbox AppleDictationAutoEnable -bool false"
     );
-  } catch (_) {
-    throw new Error(ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS);
+  } catch (e) {
+    throw new Error(`${ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS}\n\n${e.message}`);
   }
 }

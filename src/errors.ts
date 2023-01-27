@@ -10,9 +10,9 @@ export const ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS =
 export const ERR_MACOS_UNABLE_TO_VERIFY_SIP =
   "Unable to verify macOS SIP status";
 export const ERR_MACOS_UNABLE_TO_WRITE_DATABASE_FILE =
-  "Unable to write to the VoiceOver database file";
+  "Unable to write to the VoiceOver database file - SIP might not be disabled";
 export const ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB =
-  "Unable to write to the user TCC.db";
+  "Unable to write to the user TCC.db - SIP might not be disabled";
 export const ERR_MACOS_UNABLE_TO_UPDATE_UI_PREFERENCES =
   "Unable to enable VoiceOver control via UI preferences";
 export const ERR_MACOS_UI_PROMPT_FAILURE =

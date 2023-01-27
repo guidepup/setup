@@ -6,7 +6,7 @@ export function disableSplashScreenSystemDefaults(): void {
     execSync(
       "defaults write com.apple.VoiceOverTraining doNotShowSplashScreen -bool true"
     );
-  } catch (_) {
-    throw new Error(ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS)
+  } catch (e) {
+    throw new Error(`${ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS}\n\n${e.message}`);
   }
 }
