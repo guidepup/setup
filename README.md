@@ -30,7 +30,7 @@ If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action
 
 ```yaml
 - name: Setup Environment
-  uses: guidepup/setup-action@0.10.0
+  uses: guidepup/setup-action
 ```
 
 If you are encountering errors in CI for MacOS you can pass a `--record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory:
