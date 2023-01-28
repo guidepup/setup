@@ -1,8 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../../package.json");
+const { guidepupNvdaVersion } = require("../../package.json");
 
+export const GUIDEPUP_NVDA_VERSION = guidepupNvdaVersion;
 export const SUB_KEY_GUIDEPUP_NVDA = "HKCU\\Software\\Guidepup\\Nvda";
-export const VERSIONED_KEY = `guidepup_nvda_${version}`;
+export const VERSIONED_KEY = `guidepup_nvda_${GUIDEPUP_NVDA_VERSION}`;
 
 export const SUB_KEY_CONTROL_PANEL_DESKTOP = "HKCU\\Control Panel\\Desktop";
 export const FOREGROUND_LOCK_TIMEOUT_KEY = "ForegroundLockTimeout";
