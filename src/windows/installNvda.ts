@@ -4,13 +4,13 @@ import { createWriteStream, mkdtempSync, rmSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
 import { ERR_WINDOWS_FAILED_TO_INSTALL_NVDA } from "../errors";
+import { GUIDEPUP_NVDA_VERSION } from "./constants";
 
 const appName = "guidepup_nvda";
-const sourceUrl = `https://raw.githubusercontent.com/guidepup/setup/main/downloads/${appName}.zip`;
+const sourceUrl = `https://codeload.github.com/guidepup/nvda/zip/refs/tags/${GUIDEPUP_NVDA_VERSION}`;
 
 export async function installNvda(): Promise<string> {
   const destinationBaseDirectory = mkdtempSync(join(tmpdir(), `${appName}_`));
-  const destinationDirectory = join(destinationBaseDirectory, appName);
   const destinationZip = join(destinationBaseDirectory, `${appName}.zip`);
   const fileZip = createWriteStream(destinationZip);
 
@@ -57,5 +57,9 @@ export async function installNvda(): Promise<string> {
     throw new Error(`${ERR_WINDOWS_FAILED_TO_INSTALL_NVDA}\n\n${e.message}`);
   }
 
-  return destinationDirectory;
+  return join(
+    destinationBaseDirectory,
+    `nvda-${GUIDEPUP_NVDA_VERSION}`,
+    "nvda"
+  );
 }
