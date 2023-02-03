@@ -4,6 +4,7 @@
 </p>
 <p align="center">
   <a href="https://www.npmjs.com/package/@guidepup/setup"><img alt="Guidepup Setup available on NPM" src="https://img.shields.io/npm/v/@guidepup/setup" /></a>
+  <a href="https://www.npmjs.com/package/@guidepup/setup"><img alt="Guidepup available on NPM" src="https://img.shields.io/npm/dt/@guidepup/setup"></a>
   <a href="https://github.com/guidepup/setup/actions/workflows/test.yml"><img alt="Guidepup Setup test workflows" src="https://github.com/guidepup/setup/workflows/Test/badge.svg" /></a>
   <a href="https://github.com/guidepup/setup/blob/main/LICENSE"><img alt="Guidepup Setup uses the MIT license" src="https://img.shields.io/github/license/guidepup/setup" /></a>
 </p>
