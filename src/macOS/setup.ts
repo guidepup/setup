@@ -12,6 +12,7 @@ import { logInfo } from "../logging";
 import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { record } from "./record";
+import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 
 const isCi = process.argv.includes("--ci");
 const isRecorded = process.argv.includes("--record");
@@ -39,7 +40,7 @@ export async function setup(): Promise<void> {
       await enableDoNotDisturb();
     }
 
-    if (!isSipEnabled()) {
+    if (!isSipEnabled() && !(await enabledDbFile())) {
       writeDatabaseFile();
 
       return;
