@@ -38,11 +38,17 @@ export async function enableDoNotDisturb() {
   try {
     if (platformMajor <= 20) {
       await promisify(exec)(enableFocusModeShellscript);
-    } else {
+    } else if (platformMajor === 21) {
       // From MacOS 12 Monterey (Darwin 21) there is no known way to enable DND via system defaults
       await retryOnError(() => runAppleScript(enableFocusModeAppleScript));
+    } else {
+      // From MacOS 13 Ventura (Darwin 22) it seems that even AppleScript is not working anymore
+      // As far as enabling DND increases testing stability it's better to be able test on newer MacOS versions than to not be able to do it without DND
+      return;
     }
   } catch (e) {
-    throw new Error(`${ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB}\n\n${e.message}`);
+    throw new Error(
+      `${ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB}\n\n${e.message}`
+    );
   }
 }
