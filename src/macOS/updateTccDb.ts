@@ -7,7 +7,9 @@ const getEntries = (): string[] => {
   let gitlabRunnerPath: string;
 
   try {
-    gitlabRunnerPath = execSync("which gitlab-runner", { encoding: "utf8" }).trim();
+    gitlabRunnerPath = execSync("which gitlab-runner", {
+      encoding: "utf8",
+    }).trim();
   } catch {
     gitlabRunnerPath = "/usr/local/bin/gitlab-runner";
   }
@@ -177,7 +179,7 @@ const getEntries = (): string[] => {
     `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
     `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
     `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.webkit.Playwright',NULL,NULL,${epoch}`,
+    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
     `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
     `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',0,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
     `'kTCCServiceAppleEvents','${gitlabRunnerPath}',0,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
@@ -193,7 +195,9 @@ export function updateTccDb(): void {
     try {
       execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`);
     } catch (e) {
-      throw new Error(`${ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB}\n\n${e.message}`);
+      throw new Error(
+        `${ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB}\n\n${e.message}`
+      );
     }
   }
 }

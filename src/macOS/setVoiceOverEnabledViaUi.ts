@@ -19,6 +19,7 @@ tell application "System Events"
 			exit repeat
 		end if
 		
+		tell application "VoiceOver Utility" to activate
 		delay 0.1
 	end repeat
 
