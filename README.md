@@ -21,7 +21,7 @@ And get cracking with your screen reader test automation code!
 
 ## Usage
 
-If you are running this command locally, you might find it prompts you to pass in credentials so that it can using UI automation to change a checkbox value which enables the automation of VoiceOver. If you are uncomfortable with providing your credentials, you can manually achieve these steps by follow the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
+If you are running this command locally, you might find it prompts you to pass in credentials so that it can using UI automation to change a checkbox value which enables the automation of VoiceOver. If you are uncomfortable with providing your credentials you can manually achieve these steps by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
 
 If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent interactive prompts:
 
