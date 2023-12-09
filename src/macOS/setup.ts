@@ -4,7 +4,7 @@ import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDe
 import { disableDictationInputAutoEnable } from "./disableDictationInputAutoEnable";
 import { isSipEnabled } from "./isSipEnabled";
 import { writeDatabaseFile } from "./writeDatabaseFile";
-import { updateTccDb } from "./updateTccDb";
+import { SYSTEM_PATH, USER_PATH, updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
 import { askUserToControlUi } from "./askUserToControlUi";
 import { setVoiceOverEnabledViaUi } from "./setVoiceOverEnabledViaUi";
@@ -19,11 +19,17 @@ const isRecorded = process.argv.includes("--record");
 
 export async function setup(): Promise<void> {
   try {
-    updateTccDb();
+    updateTccDb(USER_PATH);
   } catch (e) {
     if (isCi) {
       throw e;
     }
+  }
+
+  try {
+    updateTccDb(SYSTEM_PATH);
+  } catch {
+    // Swallow error - most CI don't allow system configuration
   }
 
   const stopRecording = isRecorded

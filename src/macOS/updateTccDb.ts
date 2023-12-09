@@ -206,9 +206,10 @@ const getEntries = (): string[] => {
   ];
 };
 
-const path = "$HOME/Library/Application Support/com.apple.TCC/TCC.db";
+export const USER_PATH = "$HOME/Library/Application Support/com.apple.TCC/TCC.db";
+export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
 
-export function updateTccDb(): void {
+export function updateTccDb(path: string): void {
   for (const values of getEntries()) {
     const query = `INSERT OR IGNORE INTO access VALUES(${values});`;
 
