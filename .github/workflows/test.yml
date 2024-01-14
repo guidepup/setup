@@ -39,7 +39,7 @@ jobs:
           node-version: 18
       - run: yarn install --frozen-lockfile
       - run: yarn ci:nvda-install-dir
-      - run: Get-ChildItem %userprofile%
+      - run: Get-ChildItem $env:USERPROFILE\nvda
       - uses: actions/upload-artifact@v3
         if: always()
         with:

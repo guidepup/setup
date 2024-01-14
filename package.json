@@ -27,7 +27,7 @@
   "scripts": {
     "build": "yarn clean && yarn compile",
     "ci": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record",
-    "ci:nvda-install-dir": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record --nvda-install-dir %userprofile%",
+    "ci:nvda-install-dir": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record --nvda-install-dir %userprofile%\\nvda",
     "clean": "rimraf lib",
     "compile": "tsc",
     "dev": "ts-node ./src/index.ts",
