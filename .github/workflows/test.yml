@@ -27,3 +27,22 @@ jobs:
           name: artifacts
           path: |
             **/recordings/**/*
+  test-nvda-install-dir:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2019, windows-2022]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: yarn install --frozen-lockfile
+      - run: yarn ci:nvda-install-dir
+      - run: Get-ChildItem %userprofile%
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: artifacts
+          path: |
+            **/recordings/**/*
