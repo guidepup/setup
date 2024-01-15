@@ -1,3 +1,5 @@
+import { platform, release } from "os";
+import { macOSRecord } from "@guidepup/guidepup";
 import { checkVersion } from "./checkVersion";
 import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptControlSystemDefaults";
 import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDefaults";
@@ -11,7 +13,6 @@ import { setVoiceOverEnabledViaUi } from "./setVoiceOverEnabledViaUi";
 import { logInfo } from "../logging";
 import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
-import { record } from "./record";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 
 const isCi = process.argv.includes("--ci");
@@ -32,8 +33,13 @@ export async function setup(): Promise<void> {
     // Swallow error - most CI don't allow system configuration
   }
 
+  const osName = platform();
+  const osVersion = release();
+
   const stopRecording = isRecorded
-    ? record(`./recordings/macos-setup-${+new Date()}.mov`)
+    ? macOSRecord(
+        `./recordings/macos-guidepup-setup-${osName}-${osVersion}-${+new Date()}.mov`
+      )
     : () => null;
 
   try {
