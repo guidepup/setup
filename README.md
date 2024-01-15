@@ -58,7 +58,7 @@ npx @guidepup/setup --ci --record
 
 #### NVDA Installation
 
-When running on windows a portable NVDA instance compatible with Guidepup will be installed to a temporary directory. The location of this installation directory is stored in the Windows registry under the key `HKCU\Software\Guidepup\Nvda`.
+When running on windows a portable NVDA instance compatible with Guidepup will be installed to a temporary directory by default. The location of this installation directory is stored in the Windows registry under the key `HKCU\Software\Guidepup\Nvda`.
 
 If you want to specify the directory that NVDA is installed to you can pass a `--nvda-install-dir` flag to the command:
 
