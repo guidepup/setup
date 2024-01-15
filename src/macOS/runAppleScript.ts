@@ -38,9 +38,9 @@ end doWithTimeout
       {
         maxBuffer: DEFAULT_MAX_BUFFER,
       },
-      (e, stdout) => {
-        if (e) {
-          return reject(e);
+      (error, stdout) => {
+        if (error) {
+          return reject(error);
         }
 
         if (!stdout) {

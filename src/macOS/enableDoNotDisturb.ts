@@ -48,32 +48,38 @@ delay 1
 set timeoutSeconds to 30.0
 
 set command to "
+  -- Open Control Center drop down
+  tell application \\"System Events\\"
+    key down 63
+    key down \\"c\\"
+    delay 0.5
+    key up \\"c\\"
+    key up 63
+  end tell
+
   tell application \\"System Events\\"
     tell its application process \\"Control ${center}\\"
-      -- Click on and open Control ${center} drop down
-      tell its menu bar 1
-          tell (UI elements whose description is \\"Control ${center}\\")
-            click
-          end tell
-      end tell
+      tell its window 1
+        -- Check if Do Not Disturb already enabled
+        set doNotDisturbCheckbox to checkbox 2 of group 1
+        set doNotDisturbCheckboxStatus to value of doNotDisturbCheckbox as boolean
 
-      -- Check if Do Not Disturb already enabled
-      set doNotDisturbCheckbox to checkbox 2 of group 1 of window \\"Control ${center}\\"
-		  set doNotDisturbCheckboxStatus to value of doNotDisturbCheckbox as boolean
-
-      tell doNotDisturbCheckbox
-        if doNotDisturbCheckboxStatus is false then
-          perform action 1 of doNotDisturbCheckbox
-        end if
-      end tell
-
-      -- Click on and close Control ${center} drop down
-      tell its menu bar 1
-          tell (UI elements whose description is \\"Control ${center}\\")
-            click
-          end tell
+        tell doNotDisturbCheckbox
+          if doNotDisturbCheckboxStatus is false then
+            perform action 1 of doNotDisturbCheckbox
+          end if
+        end tell
       end tell
     end tell
+  end tell
+
+  -- Close Control Center drop down
+  tell application \\"System Events\\"
+    key down 63
+    key down \\"c\\"
+    delay 0.5
+    key up \\"c\\"
+    key up 63
   end tell
 "
 
