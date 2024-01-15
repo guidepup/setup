@@ -38,9 +38,7 @@ end doWithTimeout
       {
         maxBuffer: DEFAULT_MAX_BUFFER,
       },
-      (error, stdout, stderr) => {
-        console.log({ error, stdout, stderr });
-
+      (error, stdout) => {
         if (error) {
           return reject(error);
         }

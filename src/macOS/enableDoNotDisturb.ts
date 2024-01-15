@@ -40,7 +40,7 @@ my withTimeout(command, timeoutSeconds)
 const enableFocusModeVenturaAppleScript = (locale: string) => {
   // TODO: attempt to rewrite scripts without any locale specific instructions
   // so this setup can be used regardless of user locale preferences.
-  const center = locale.trim() === "en_GB" ? "Centre" : "Center";
+  const center = "Centre"; // locale.trim() === "en_GB" ? "Centre" : "Center";
 
   return `-- Startup delay to reduce chance of "Application isn't running (-600)" errors
 delay 1
