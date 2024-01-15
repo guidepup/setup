@@ -84,7 +84,7 @@ Both of these are set to `0` by the setup script.
 Check out some of the other Guidepup modules:
 
 - [`@guidepup/guidepup`](https://github.com/guidepup/guidepup/) - Reliable automation for your screen reader a11y workflows through JavaScript supporting VoiceOver and NVDA.
-- [`@guidepup/playwright`](https://github.com/guidepup/guidepup-playwright/) - Seemless integration of Guidepup with Playwright.
+- [`@guidepup/playwright`](https://github.com/guidepup/guidepup-playwright/) - Seamless integration of Guidepup with Playwright.
 - [`@guidepup/virtual-screen-reader`](https://github.com/guidepup/virtual-screen-reader/) - Reliable unit testing for your screen reader a11y workflows.
 - [`@guidepup/jest`](https://github.com/guidepup/jest/) - Jest matchers for reliable unit testing of your screen reader a11y workflows.
 
