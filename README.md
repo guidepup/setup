@@ -42,11 +42,25 @@ If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action
 
 If you are running this command locally, you might find it prompts you to pass in credentials so that it can using UI automation to change a checkbox value which enables the automation of VoiceOver. If you are uncomfortable with providing your credentials you can manually achieve these steps by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
 
+#### CI
+
 If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent interactive prompts:
 
 ```console
 npx @guidepup/setup --ci
 ```
+
+#### Ignore TCC.db Updates
+
+If updating the TCC.db is not possible (due to SIP) or required you can skip the database update step by using the `--ignore-tcc-db` flag:
+
+```console
+npx @guidepup/setup --ignore-tcc-db
+```
+
+> Note: If the necessary permissions have not been granted by other means, using this flag may result in your environment not being setup for reliable screen reader automation.
+
+#### Recording
 
 If you are encountering errors in CI for MacOS you can pass a `--record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory:
 
