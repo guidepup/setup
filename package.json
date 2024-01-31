@@ -1,6 +1,6 @@
 {
   "name": "@guidepup/setup",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Setup your environment for screen-reader automation.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -28,6 +28,7 @@
     "build": "yarn clean && yarn compile",
     "ci": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record",
     "ci:nvda-install-dir": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record --nvda-install-dir %userprofile%\\nvda",
+    "ci:ignore-tcc-db": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record --ignore-tcc-db",
     "clean": "rimraf lib",
     "compile": "tsc",
     "dev": "ts-node ./src/index.ts",
