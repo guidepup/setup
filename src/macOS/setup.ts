@@ -16,21 +16,24 @@ import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 
 const isCi = process.argv.includes("--ci");
+const ignoreTccDb = process.argv.includes("--ignore-tcc-db");
 const isRecorded = process.argv.includes("--record");
 
 export async function setup(): Promise<void> {
-  try {
-    updateTccDb(USER_PATH);
-  } catch (e) {
-    if (isCi) {
-      throw e;
+  if (!ignoreTccDb) {
+    try {
+      updateTccDb(USER_PATH);
+    } catch (e) {
+      if (isCi) {
+        throw e;
+      }
     }
-  }
 
-  try {
-    updateTccDb(SYSTEM_PATH);
-  } catch {
-    // Swallow error - most CI don't allow system configuration
+    try {
+      updateTccDb(SYSTEM_PATH);
+    } catch {
+      // Swallow error - most CI don't allow system configuration
+    }
   }
 
   const osName = platform();
