@@ -214,7 +214,7 @@ export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
 export function updateTccDb(path: string): void {
   for (const values of getEntries()) {
     const osRelease = release();
-    const isSonomaOrNewer = parseInt(osRelease.split(".").at(0)) >= 22;
+    const isSonomaOrNewer = parseInt(osRelease.split(".").at(0)) >= 23;
     const query = `INSERT OR IGNORE INTO access VALUES(${values}${
       isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""
     });`;
