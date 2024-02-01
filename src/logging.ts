@@ -12,25 +12,12 @@ export function handleComplete(): never {
   process.exit(0);
 }
 
-export function handleWarning(err: Error): void {
-  let message = err.message;
-
-  if (err.name) {
-    message = `${err.name}: ${message}`;
-  }
-
+export function handleWarning(title: string, subtitle: string): void {
   logWarn("");
-  logWarn(chalk.bold(chalk.yellow(`[!] ${chalk.bold(message.toString())}`)));
+  logWarn(chalk.bold(chalk.yellow(`[!] Warning: ${chalk.bold(title)}`)));
   logWarn("");
-  logWarn("Unable to complete environment setup");
-  logWarn("");
-  logWarn(
-    chalk.dim(
-      "Please raise new issues at: " +
-        chalk.underline("https://github.com/guidepup/setup/issues")
-    )
-  );
-  logWarn("");
+  logWarn(subtitle);
+  logError("");
 }
 
 export function handleError(err: Error): never {

@@ -10,7 +10,7 @@ import { SYSTEM_PATH, USER_PATH, updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
 import { askUserToControlUi } from "./askUserToControlUi";
 import { setVoiceOverEnabledViaUi } from "./setVoiceOverEnabledViaUi";
-import { logInfo } from "../logging";
+import { handleWarning, logInfo } from "../logging";
 import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
@@ -34,6 +34,11 @@ export async function setup(): Promise<void> {
     } catch {
       // Swallow error - most CI don't allow system configuration
     }
+  } else {
+    handleWarning(
+      "Ignoring TCC.db updates",
+      "If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation."
+    );
   }
 
   const osName = platform();
