@@ -60,7 +60,7 @@ npx @guidepup/setup --ignore-tcc-db
 ```
 
 > [!NOTE]
-> If the necessary permissions have not been granted by other means, using this flag may result in your environment not being setup for reliable screen reader automation.
+> If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation.
 
 #### Recording
 
