@@ -40,7 +40,7 @@ If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action
 
 ### MacOS
 
-If you are running this command locally, you might find it prompts you to pass in credentials so that it can using UI automation to change a checkbox value which enables the automation of VoiceOver. If you are uncomfortable with providing your credentials you can manually achieve these steps by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
+If you are running this command locally you may need to take some manual steps to complete setup by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
 
 #### CI
 
