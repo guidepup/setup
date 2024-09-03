@@ -5,6 +5,7 @@ import { join } from "path";
 import { tmpdir } from "os";
 import { ERR_WINDOWS_FAILED_TO_INSTALL_NVDA } from "../errors";
 import { GUIDEPUP_NVDA_VERSION } from "./constants";
+import { HttpsProxyAgent } from 'https-proxy-agent';
 
 const appName = "guidepup_nvda";
 const sourceUrl = `https://codeload.github.com/guidepup/nvda/zip/refs/tags/${GUIDEPUP_NVDA_VERSION}`;
@@ -39,6 +40,19 @@ export async function installNvda({
     }
   }
 
+  let agent: HttpsProxyAgent<string> | undefined
+
+  const proxyUrl = (
+      process.env.HTTPS_PROXY ||
+      process.env.https_proxy ||
+      process.env.HTTP_PROXY ||
+      process.env.http_proxy
+  )
+
+  if (proxyUrl) {
+    agent = new HttpsProxyAgent(proxyUrl)
+  }
+
   try {
     await new Promise<void>((resolve, reject) => {
       function onSuccess() {
@@ -51,7 +65,7 @@ export async function installNvda({
         });
       }
 
-      const request = get(sourceUrl, (response) => response.pipe(fileZip));
+      const request = get(sourceUrl, { agent }, (response) => response.pipe(fileZip));
       request.on("error", reject);
       fileZip.on("finish", onSuccess);
       fileZip.on("error", reject);
