@@ -52,6 +52,7 @@
     "@guidepup/guidepup": "^0.22.0",
     "chalk": "^4.0.0",
     "decompress": "^4.2.1",
+    "https-proxy-agent": "^7.0.5",
     "regedit": "5.0.1",
     "semver": "^7.5.4"
   },
