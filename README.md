@@ -81,6 +81,15 @@ If you want to specify the directory that NVDA is installed to you can pass a `-
 npx @guidepup/setup --nvda-install-dir <NVDA_INSTALLATION_DIRECTORY>
 ```
 
+##### Using HTTP / HTTPS Proxy for Installation
+
+If you are using a proxy connection, you must define the proxy URL in an env variable. You can use any of the following variables:
+
+- `HTTPS_PROXY`
+- `https_proxy`
+- `HTTP_PROXY`
+- `http_proxy`
+
 #### Foreground Timeout Lock
 
 Modern versions of Windows have a setting which prevents new application instances launching in front of other applications in quick succession, requiring over 3 minutes between activations before it will actually show the window - in the interim it launches the window minimized.
