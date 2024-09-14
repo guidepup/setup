@@ -1,4 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 const { guidepupNvdaVersion } = require("../../package.json");
 
 export const GUIDEPUP_NVDA_VERSION = guidepupNvdaVersion;
