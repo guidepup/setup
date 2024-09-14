@@ -1,5 +1,5 @@
 import { platform, release } from "os";
-import { macOSRecord } from "@guidepup/guidepup";
+import { macOSRecord } from "@guidepup/record";
 import chalk from "chalk";
 import { checkVersion } from "./checkVersion";
 import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptControlSystemDefaults";
