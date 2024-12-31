@@ -14,7 +14,7 @@ export function enableAppleScriptControlSystemDefaults(): void {
   // For MacOS 14 Sonoma (Darwin 23) and earlier VoiceOver preferences are set via system defaults.
   if (platformMajor < 24) {
     try {
-      execSync(VOICE_OVER_APPLESCRIPT_ENABLED_DEFAULTS);
+      execSync(VOICE_OVER_APPLESCRIPT_ENABLED_DEFAULTS, { encoding: "utf8" });
 
       return;
     } catch (e) {
@@ -26,7 +26,7 @@ export function enableAppleScriptControlSystemDefaults(): void {
 
   // From MacOS 15 Sequoia (Darwin 24) VoiceOver preferences are sandboxed.
   try {
-    execSync(VOICE_OVER_APPLESCRIPT_ENABLED_PLUTIL);
+    execSync(VOICE_OVER_APPLESCRIPT_ENABLED_PLUTIL, { encoding: "utf8" });
 
     return;
   } catch (e) {
