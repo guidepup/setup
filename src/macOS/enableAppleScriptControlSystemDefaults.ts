@@ -30,6 +30,8 @@ export function enableAppleScriptControlSystemDefaults(): void {
 
     return;
   } catch (e) {
+    console.error(e);
+
     throw new Error(
       `${ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS}\n\n${e.message}`
     );
