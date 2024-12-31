@@ -5,7 +5,7 @@ const VOICE_OVER_APPLESCRIPT_ENABLED_DEFAULTS =
   "defaults read com.apple.VoiceOver4/default SCREnableAppleScript";
 
 const VOICE_OVER_APPLESCRIPT_ENABLED_PLUTIL =
-  "plutil -extract SCREnableAppleScript raw -o - ~/Library/Group\\ Containers/group.com.apple.VoiceOver/Library/Preferences/com.apple.VoiceOver4/default.plist";
+  "sudo plutil -extract SCREnableAppleScript raw -o - ~/Library/Group\\ Containers/group.com.apple.VoiceOver/Library/Preferences/com.apple.VoiceOver4/default.plist";
 
 export function enabledDefaults(): boolean {
   const platformMajor = getPlatformVersionMajor();
