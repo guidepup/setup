@@ -6,7 +6,7 @@ const VOICE_OVER_APPLESCRIPT_ENABLED_DEFAULTS =
   "defaults write com.apple.VoiceOver4/default SCREnableAppleScript -bool true";
 
 const VOICE_OVER_APPLESCRIPT_ENABLED_PLUTIL =
-  "sudo plutil -replace SCREnableAppleScript -bool true ~/Library/Group\\ Containers/group.com.apple.VoiceOver/Library/Preferences/com.apple.VoiceOver4/default.plist";
+  "plutil -replace SCREnableAppleScript -bool true ~/Library/Group\\ Containers/group.com.apple.VoiceOver/Library/Preferences/com.apple.VoiceOver4/default.plist";
 
 export function enableAppleScriptControlSystemDefaults(): void {
   const platformMajor = getPlatformVersionMajor();
