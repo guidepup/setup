@@ -16,9 +16,9 @@ jobs:
         os: [macos-13, macos-14, macos-15, windows-2019, windows-2022]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
       - run: yarn install --frozen-lockfile
       - run: yarn ci
       - uses: actions/upload-artifact@v4
@@ -34,9 +34,9 @@ jobs:
         os: [macos-14]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
       - run: yarn install --frozen-lockfile
       - run: yarn ci:ignore-tcc-db
       - uses: actions/upload-artifact@v3
