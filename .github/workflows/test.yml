@@ -24,7 +24,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts
+          name: artifacts-test-${{ matrix.os }}
           path: |
             **/recordings/**/*
   test-ignore-tcc-db:
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts
+          name: artifacts-test-ignore-tcc-db-${{ matrix.os }}
           path: |
             **/recordings/**/*
   test-nvda-install-dir:
@@ -61,6 +61,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts
+          name: artifacts-test-nvda-install-dir-${{ matrix.os }}
           path: |
             **/recordings/**/*
