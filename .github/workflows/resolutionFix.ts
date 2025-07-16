@@ -3,7 +3,8 @@ import { execSync } from "child_process";
 if (process.platform === "darwin") {
   try {
     execSync(
-      `"/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080`
+      `"/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080`,
+      { encoding: "utf8" }
     );
   } catch (_) {
     // swallow

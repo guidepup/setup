@@ -3,6 +3,7 @@ import { macOSRecord } from "@guidepup/record";
 import chalk from "chalk";
 import { checkVersion } from "./checkVersion";
 import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptControlSystemDefaults";
+import { enableAppleScriptControlSandboxedDefaults } from "./enableAppleScriptControlSandboxedDefaults";
 import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDefaults";
 import { disableDictationInputAutoEnable } from "./disableDictationInputAutoEnable";
 import { isSipEnabled } from "./isSipEnabled";
@@ -61,6 +62,7 @@ export async function setup(): Promise<void> {
 
     if (!isSipEnabled() && !(await enabledDbFile())) {
       writeDatabaseFile();
+      enableAppleScriptControlSandboxedDefaults();
 
       return;
     }
