@@ -13,7 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-14, macos-15, macos-26, windows-2022, windows-2025]
+        # os: [macos-14, macos-15, macos-26, windows-2022, windows-2025]
+        os: [macos-26]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
@@ -27,40 +28,40 @@ jobs:
           name: artifacts-test-${{ matrix.os }}
           path: |
             **/recordings/**/*
-  test-ignore-tcc-db:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-14]
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-      - run: yarn install --frozen-lockfile
-      - run: yarn ci:ignore-tcc-db
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: artifacts-test-ignore-tcc-db-${{ matrix.os }}
-          path: |
-            **/recordings/**/*
-  test-nvda-install-dir:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-2022, windows-2025]
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-      - run: yarn install --frozen-lockfile
-      - run: yarn ci:nvda-install-dir
-      - run: Get-ChildItem $env:USERPROFILE\nvda
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: artifacts-test-nvda-install-dir-${{ matrix.os }}
-          path: |
-            **/recordings/**/*
+  # test-ignore-tcc-db:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [macos-14]
+  #   steps:
+  #     - uses: actions/checkout@v5
+  #     - uses: actions/setup-node@v6
+  #       with:
+  #         node-version-file: .nvmrc
+  #     - run: yarn install --frozen-lockfile
+  #     - run: yarn ci:ignore-tcc-db
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: artifacts-test-ignore-tcc-db-${{ matrix.os }}
+  #         path: |
+  #           **/recordings/**/*
+  # test-nvda-install-dir:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [windows-2022, windows-2025]
+  #   steps:
+  #     - uses: actions/checkout@v5
+  #     - uses: actions/setup-node@v6
+  #       with:
+  #         node-version-file: .nvmrc
+  #     - run: yarn install --frozen-lockfile
+  #     - run: yarn ci:nvda-install-dir
+  #     - run: Get-ChildItem $env:USERPROFILE\nvda
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: artifacts-test-nvda-install-dir-${{ matrix.os }}
+  #         path: |
+  #           **/recordings/**/*

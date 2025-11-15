@@ -37,10 +37,15 @@ set command to "
 my withTimeout(command, timeoutSeconds)
 `;
 
-const enableFocusModeVenturaAppleScript = (locale: string) => {
+const enableFocusModeVenturaAppleScript = (
+  locale: string,
+  platformMajor: number
+) => {
   // TODO: attempt to rewrite scripts without any locale specific instructions
   // so this setup can be used regardless of user locale preferences.
   const center = locale.trim() === "en_GB" ? "Centre" : "Center";
+  const checkboxPosition =
+    platformMajor < 25 ? "checkbox 2 of group 1" : "checkbox 6 of group 1";
 
   return `-- Startup delay to reduce chance of "Application isn't running (-600)" errors
 delay 1
@@ -61,7 +66,7 @@ set command to "
     tell its application process \\"Control ${center}\\"
       tell its window 1
         -- Check if Do Not Disturb already enabled
-        set doNotDisturbCheckbox to checkbox 2 of group 1
+        set doNotDisturbCheckbox to ${checkboxPosition}
         set doNotDisturbCheckboxStatus to value of doNotDisturbCheckbox as boolean
 
         tell doNotDisturbCheckbox
@@ -101,7 +106,7 @@ export async function enableDoNotDisturb() {
 
       // From MacOS 13 Ventura (Darwin 22) there is no known way to enable DND via system settings
       await retryOnError(() =>
-        runAppleScript(enableFocusModeVenturaAppleScript(locale))
+        runAppleScript(enableFocusModeVenturaAppleScript(locale, platformMajor))
       );
     }
   } catch (e) {
