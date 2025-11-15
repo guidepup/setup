@@ -1,6 +1,6 @@
 {
   "name": "@guidepup/setup",
-  "version": "0.19.3",
+  "version": "0.20.0",
   "description": "Setup your environment for screen-reader automation.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -39,7 +39,7 @@
     "prepublish": "yarn build"
   },
   "devDependencies": {
-    "@types/node": "^22.5.5",
+    "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "^8.5.0",
     "@typescript-eslint/parser": "^8.5.0",
     "eslint": "^8.56.0",
@@ -49,7 +49,6 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "@guidepup/guidepup": "^0.24.0",
     "@guidepup/record": "^0.1.0",
     "chalk": "^4.0.0",
     "decompress": "^4.2.1",

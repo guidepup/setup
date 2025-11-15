@@ -3,7 +3,34 @@ import { execSync } from "child_process";
 import { ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../errors";
 
 const epoch = +Date.now();
-const circleciRunner = "/private/tmp/.machine-agent";
+
+const sshdPath = "/usr/sbin/sshd";
+const bashPath = "/bin/bash";
+const zshPath = "/bin/zsh";
+const oascriptPath = "/usr/bin/osascript";
+const githubRunProvisionerScriptPath =
+  "/usr/local/opt/runner/runprovisioner.sh";
+const githubProvisionerPath = "/usr/local/opt/runner/provisioner/provisioner";
+const githubStartHCAScriptPath = "/opt/hca/start_hca.sh";
+const githubHostedComputeAgentPath = "/opt/hca/hosted-compute-agent";
+const circleciRunnerPath = "/private/tmp/.machine-agent";
+
+const terminalApp = "com.apple.Terminal";
+const voiceOverUtilityApp = "com.apple.VoiceOverUtility";
+const voiceOverApp = "com.apple.VoiceOver";
+const systemEventsApp = "com.apple.systemevents";
+const finderApp = "com.apple.finder";
+const safariApp = "com.apple.Safari";
+const firefoxApp = "org.mozilla.firefox";
+const firefoxNightlyApp = "org.mozilla.nightly";
+const operaApp = "com.operasoftware.Opera";
+const chromeApp = "com.google.Chrome";
+const chromeBetaApp = "com.google.Chrome.beta";
+const chromiumApp = "org.chromium.Chromium";
+const edgeApp = "com.microsoft.edgemac";
+const edgeBetaApp = "com.microsoft.edgemac.Beta";
+const edgeDevApp = "com.microsoft.edgemac.Dev";
+const playwrightWebkitApp = "org.webkit.Playwright";
 
 const getEntries = (): string[] => {
   let gitlabRunnerPath: string;
@@ -16,215 +43,129 @@ const getEntries = (): string[] => {
     gitlabRunnerPath = "/usr/local/bin/gitlab-runner";
   }
 
+  const standardClients = [
+    sshdPath,
+    bashPath,
+    zshPath,
+    oascriptPath,
+    terminalApp,
+    githubRunProvisionerScriptPath,
+    githubProvisionerPath,
+    githubStartHCAScriptPath,
+    githubHostedComputeAgentPath,
+    gitlabRunnerPath,
+    circleciRunnerPath,
+  ];
+
   /**
    * See https://www.rainforestqa.com/blog/macos-tcc-db-deep-dive for details on TCC.db entries.
    */
   return [
     // Permit Sending Keystrokes
-    `'kTCCServicePostEvent','/usr/sbin/sshd',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServicePostEvent','/bin/bash',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServicePostEvent','/bin/zsh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServicePostEvent','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServicePostEvent','com.apple.Terminal',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServicePostEvent','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServicePostEvent','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServicePostEvent','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServicePostEvent','${circleciRunner}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServicePostEvent','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`
+    ),
     // Permit Control Of Device
-    `'kTCCServiceAccessibility','/usr/sbin/sshd',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceAccessibility','/bin/bash',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceAccessibility','/bin/zsh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceAccessibility','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceAccessibility','com.apple.Terminal',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceAccessibility','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceAccessibility','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceAccessibility','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceAccessibility','${circleciRunner}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAccessibility','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`
+    ),
     // Permit Full Disk Access
-    `'kTCCServiceSystemPolicyAllFiles','/usr/sbin/sshd',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','/bin/bash',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','/bin/zsh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','com.apple.Terminal',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceSystemPolicyAllFiles','${circleciRunner}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceSystemPolicyAllFiles','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`
+    ),
     // Permit Access To Microphone
-    `'kTCCServiceMicrophone','/usr/sbin/sshd',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceMicrophone','/bin/bash',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceMicrophone','/bin/zsh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceMicrophone','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceMicrophone','com.apple.Terminal',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceMicrophone','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceMicrophone','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceMicrophone','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceMicrophone','${circleciRunner}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceMicrophone','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`
+    ),
     // Permit Capture Of System Display
-    `'kTCCServiceScreenCapture','/usr/sbin/sshd',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceScreenCapture','/bin/bash',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceScreenCapture','/bin/zsh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceScreenCapture','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'UNUSED',NULL,NULL,${epoch}`,
-    `'kTCCServiceScreenCapture','com.apple.Terminal',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceScreenCapture','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceScreenCapture','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceScreenCapture','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceScreenCapture','${circleciRunner}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceScreenCapture','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`
+    ),
     // Permit VoiceOver Access To Location
-    `'kTCCServiceLiverpool','com.apple.VoiceOverUtility',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
-    `'kTCCServiceLiverpool','com.apple.VoiceOver',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    `'kTCCServiceLiverpool','${voiceOverUtilityApp}',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    `'kTCCServiceLiverpool','${voiceOverApp}',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
     // Permit VoiceOver Access To Bluetooth
-    `'kTCCServiceBluetoothAlways','com.apple.VoiceOver',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
+    `'kTCCServiceBluetoothAlways','${voiceOverApp}',0,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
     // Permit Control Of System Events
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.apple.systemevents',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${systemEventsApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of VoiceOver
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOver',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${voiceOverApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of VoiceOver Utility
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.apple.VoiceOverUtility',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${voiceOverUtilityApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Finder
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.apple.finder',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${finderApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Safari
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.apple.Safari',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${safariApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Firefox
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'org.mozilla.firefox',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${firefoxApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Firefox Nightly And Playwright Firefox Nightly
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'org.mozilla.nightly',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${firefoxNightlyApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Opera
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.operasoftware.Opera',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${operaApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Google Chrome
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.google.Chrome',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${chromeApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Google Chrome Beta
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.google.Chrome.beta',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${chromeBetaApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Chromium
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'org.chromium.Chromium',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${chromiumApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Microsoft Edge
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${edgeApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Microsoft Edge Beta
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Beta',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${edgeBetaApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Microsoft Edge Dev
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'com.microsoft.edgemac.Dev',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${edgeDevApp}',NULL,NULL,${epoch}`
+    ),
     // Permit Control Of Playwright WebKit
-    `'kTCCServiceAppleEvents','/usr/sbin/sshd',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/bash',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/bin/zsh',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/bin/osascript',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','com.apple.Terminal',0,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/runprovisioner.sh',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','/usr/local/opt/runner/provisioner/provisioner',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${gitlabRunnerPath}',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
-    `'kTCCServiceAppleEvents','${circleciRunner}',1,2,3,1,NULL,NULL,0,'org.webkit.Playwright',NULL,NULL,${epoch}`,
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${playwrightWebkitApp}',NULL,NULL,${epoch}`
+    ),
   ];
 };
 
