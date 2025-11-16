@@ -60,7 +60,7 @@ set command to "
     delay 1
     key up \\"c\\"
     key up 63
-    delay 1
+    delay 2
   end tell
 
   tell application \\"System Events\\"
@@ -79,13 +79,16 @@ set command to "
     end tell
   end tell
 
+  delay 2
+
   -- Close Control Center drop down
   tell application \\"System Events\\"
     key down 63
     key down \\"c\\"
-    delay 0.5
+    delay 1
     key up \\"c\\"
     key up 63
+    delay 2
   end tell
 "
 
