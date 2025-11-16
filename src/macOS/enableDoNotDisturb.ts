@@ -37,10 +37,15 @@ set command to "
 my withTimeout(command, timeoutSeconds)
 `;
 
-const enableFocusModeVenturaAppleScript = (locale: string) => {
+const enableFocusModeVenturaAppleScript = (
+  locale: string,
+  platformMajor: number
+) => {
   // TODO: attempt to rewrite scripts without any locale specific instructions
   // so this setup can be used regardless of user locale preferences.
   const center = locale.trim() === "en_GB" ? "Centre" : "Center";
+  const checkboxPosition =
+    platformMajor < 25 ? "checkbox 2 of group 1" : "checkbox 7 of group 1";
 
   return `-- Startup delay to reduce chance of "Application isn't running (-600)" errors
 delay 1
@@ -52,34 +57,38 @@ set command to "
   tell application \\"System Events\\"
     key down 63
     key down \\"c\\"
-    delay 0.5
+    delay 1
     key up \\"c\\"
     key up 63
+    delay 2
   end tell
 
   tell application \\"System Events\\"
     tell its application process \\"Control ${center}\\"
       tell its window 1
         -- Check if Do Not Disturb already enabled
-        set doNotDisturbCheckbox to checkbox 2 of group 1
+        set doNotDisturbCheckbox to ${checkboxPosition}
         set doNotDisturbCheckboxStatus to value of doNotDisturbCheckbox as boolean
 
         tell doNotDisturbCheckbox
           if doNotDisturbCheckboxStatus is false then
-            perform action 1 of doNotDisturbCheckbox
+            click doNotDisturbCheckbox
           end if
         end tell
       end tell
     end tell
   end tell
 
+  delay 2
+
   -- Close Control Center drop down
   tell application \\"System Events\\"
     key down 63
     key down \\"c\\"
-    delay 0.5
+    delay 1
     key up \\"c\\"
     key up 63
+    delay 2
   end tell
 "
 
@@ -101,7 +110,7 @@ export async function enableDoNotDisturb() {
 
       // From MacOS 13 Ventura (Darwin 22) there is no known way to enable DND via system settings
       await retryOnError(() =>
-        runAppleScript(enableFocusModeVenturaAppleScript(locale))
+        runAppleScript(enableFocusModeVenturaAppleScript(locale, platformMajor))
       );
     }
   } catch (e) {
