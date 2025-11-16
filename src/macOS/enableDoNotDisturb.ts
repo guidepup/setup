@@ -45,7 +45,7 @@ const enableFocusModeVenturaAppleScript = (
   // so this setup can be used regardless of user locale preferences.
   const center = locale.trim() === "en_GB" ? "Centre" : "Center";
   const checkboxPosition =
-    platformMajor < 25 ? "checkbox 2 of group 1" : "checkbox 6 of group 1";
+    platformMajor < 25 ? "checkbox 2 of group 1" : "checkbox 7 of group 1";
 
   return `-- Startup delay to reduce chance of "Application isn't running (-600)" errors
 delay 1
