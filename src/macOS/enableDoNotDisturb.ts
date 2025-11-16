@@ -57,9 +57,10 @@ set command to "
   tell application \\"System Events\\"
     key down 63
     key down \\"c\\"
-    delay 0.5
+    delay 1
     key up \\"c\\"
     key up 63
+    delay 1
   end tell
 
   tell application \\"System Events\\"
@@ -71,7 +72,7 @@ set command to "
 
         tell doNotDisturbCheckbox
           if doNotDisturbCheckboxStatus is false then
-            perform action 1 of doNotDisturbCheckbox
+            click doNotDisturbCheckbox
           end if
         end tell
       end tell
