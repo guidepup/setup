@@ -1,5 +1,4 @@
 import { platform, release } from "os";
-import { macOSRecord } from "@guidepup/record";
 import chalk from "chalk";
 import { checkVersion } from "./checkVersion";
 import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptControlSystemDefaults";
@@ -44,11 +43,22 @@ export async function setup(): Promise<void> {
   const osName = platform();
   const osVersion = release();
 
-  const stopRecording = isRecorded
-    ? macOSRecord(
+  let stopRecording: () => void = () => null;
+
+  if (isRecorded) {
+    try {
+      const { macOSRecord } = await import("@guidepup/record");
+
+      stopRecording = macOSRecord(
         `./recordings/macos-guidepup-setup-${osName}-${osVersion}-${+new Date()}.mov`,
-      )
-    : () => null;
+      );
+    } catch {
+      handleWarning(
+        "@guidepup/record not available",
+        "Recording will be skipped. This is expected on platforms without ffmpeg support (e.g., Windows ARM64).",
+      );
+    }
+  }
 
   try {
     checkVersion();
