@@ -11,7 +11,6 @@ import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
 import { handleWarning, logInfo } from "../logging";
 import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
-import { disableNotificationCenter } from "./disableNotificationCenter";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 
 const isCi = process.argv.includes("--ci");
@@ -68,7 +67,6 @@ export async function setup(): Promise<void> {
 
     if (isCi) {
       await enableDoNotDisturb();
-      await disableNotificationCenter();
     }
 
     if (!isSipEnabled() && !(await enabledDbFile())) {
