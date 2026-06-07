@@ -9,8 +9,6 @@ export const ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS =
   "Unable to update system defaults";
 export const ERR_MACOS_UNABLE_DISABLE_NOTIFICATION_CENTER =
   "Unable to disable the notification center";
-export const ERR_MACOS_UNABLE_UPDATE_VOICE_OVER_SANDBOXED_DEFAULTS =
-  "Unable to update VoiceOver sandboxed defaults - SIP might not be disabled";
 export const ERR_MACOS_UNABLE_TO_VERIFY_SIP =
   "Unable to verify macOS SIP status";
 export const ERR_MACOS_UNABLE_TO_WRITE_DATABASE_FILE =
