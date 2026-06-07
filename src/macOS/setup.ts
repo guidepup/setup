@@ -3,7 +3,6 @@ import { macOSRecord } from "@guidepup/record";
 import chalk from "chalk";
 import { checkVersion } from "./checkVersion";
 import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptControlSystemDefaults";
-import { enableAppleScriptControlSandboxedDefaults } from "./enableAppleScriptControlSandboxedDefaults";
 import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDefaults";
 import { disableDictationInputAutoEnable } from "./disableDictationInputAutoEnable";
 import { isSipEnabled } from "./isSipEnabled";
@@ -13,6 +12,7 @@ import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
 import { handleWarning, logInfo } from "../logging";
 import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
+import { disableNotificationCenter } from "./disableNotificationCenter";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 
 const isCi = process.argv.includes("--ci");
@@ -37,7 +37,7 @@ export async function setup(): Promise<void> {
   } else {
     handleWarning(
       "Ignoring TCC.db updates",
-      "If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation."
+      "If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation.",
     );
   }
 
@@ -46,7 +46,7 @@ export async function setup(): Promise<void> {
 
   const stopRecording = isRecorded
     ? macOSRecord(
-        `./recordings/macos-guidepup-setup-${osName}-${osVersion}-${+new Date()}.mov`
+        `./recordings/macos-guidepup-setup-${osName}-${osVersion}-${+new Date()}.mov`,
       )
     : () => null;
 
@@ -58,11 +58,11 @@ export async function setup(): Promise<void> {
 
     if (isCi) {
       await enableDoNotDisturb();
+      await disableNotificationCenter();
     }
 
     if (!isSipEnabled() && !(await enabledDbFile())) {
       writeDatabaseFile();
-      enableAppleScriptControlSandboxedDefaults();
 
       return;
     }
@@ -79,9 +79,9 @@ export async function setup(): Promise<void> {
       "Please complete remaining setup by following this guide:\n\n--> " +
         chalk.underline(
           chalk.bold(
-            "https://www.guidepup.dev/docs/guides/manual-voiceover-setup"
-          )
-        )
+            "https://www.guidepup.dev/docs/guides/manual-voiceover-setup",
+          ),
+        ),
     );
   } finally {
     stopRecording();
