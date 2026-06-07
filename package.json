@@ -11,7 +11,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/guidepup/setup"
+    "url": "git+https://github.com/guidepup/setup.git"
   },
   "bugs": {
     "url": "https://github.com/guidepup/setup/issues"
