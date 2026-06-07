@@ -1,16 +1,16 @@
-import { exec } from "child_process";
+import { execSync } from "child_process";
 
 const VOICE_OVER_APPLESCRIPT_ENABLED_DEFAULTS =
   "defaults read com.apple.VoiceOver4/default SCREnableAppleScript";
 
-export async function enabledDefaults(): Promise<boolean> {
-  return await new Promise<boolean>((resolve) => {
-    exec(VOICE_OVER_APPLESCRIPT_ENABLED_DEFAULTS, (err, stdout) => {
-      if (err) {
-        resolve(false);
-      } else {
-        resolve(stdout.trim() === "1");
-      }
+export function enabledDefaults(): boolean {
+  try {
+    const result = execSync(VOICE_OVER_APPLESCRIPT_ENABLED_DEFAULTS, {
+      encoding: "utf8",
     });
-  });
+
+    return result.trim() === "1";
+  } catch {
+    return false;
+  }
 }
