@@ -13,7 +13,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-14, macos-15, macos-26, windows-2022, windows-2025]
+        os:
+          [
+            macos-14,
+            macos-15,
+            macos-15-intel,
+            macos-26,
+            macos-26-intel,
+            windows-2022,
+            windows-2025,
+            windows-11-arm,
+          ]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
@@ -31,7 +41,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-14]
+        os: [macos-latest]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
@@ -49,7 +59,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022, windows-2025]
+        os: [windows-2022, windows-2025, windows-11-arm]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v6
