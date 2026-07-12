@@ -70,4 +70,29 @@ jobs:
           npm install @guidepup/guidepup
           npm install -g "${GITHUB_WORKSPACE}"
           export PATH="$(npm bin -g):$PATH"
+
+          cat > node_modules/@guidepup/guidepup/manifest.json <<'EOF'
+          {
+            "version": 1,
+            "screenReaders": [
+              {
+                "id": "voiceover",
+                "name": "VoiceOver",
+                "platforms": ["darwin"],
+                "defaultDownload": true,
+                "assets": [
+                  {
+                    "version": "1.0.0",
+                    "platformVersion": "26",
+                    "repository": "guidepup/voiceover",
+                    "release": "v1.0.0",
+                    "asset": "voiceover-macos-26.dmg",
+                    "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
           guidepup install
