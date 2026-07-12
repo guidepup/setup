@@ -13,8 +13,12 @@ import {
 async function install(screenreader?: string): Promise<void> {
   let targets: InstallTarget[];
 
+  console.log({ screenreader });
+
   try {
     const manifest = resolveGuidepupManifest();
+
+    console.log({ manifest });
 
     targets = selectInstallTargets(manifest, screenreader);
   } catch (error) {

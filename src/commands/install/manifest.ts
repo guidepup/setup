@@ -35,6 +35,8 @@ function isCompatibleWithCurrentPlatform(
 
   const currentPlatform = platform();
 
+  console.log({ currentPlatform });
+
   return compatiblePlatforms.some((candidate) => {
     if (typeof candidate !== "string") {
       return false;
@@ -123,6 +125,8 @@ export function selectInstallTargets(
 ): InstallTarget[] {
   const screenReaders = getScreenReaders(manifest);
 
+  console.log({ screenReaders });
+
   const selectedNames = requestedScreenReader
     ? [requestedScreenReader]
     : Object.keys(screenReaders).filter((name) => {
@@ -133,6 +137,8 @@ export function selectInstallTargets(
           isCompatibleWithCurrentPlatform(screenReader)
         );
       });
+
+  console.log({ selectedNames });
 
   const targets = selectedNames
     .map((name) => ({
@@ -146,6 +152,8 @@ export function selectInstallTargets(
 
       return isCompatibleWithCurrentPlatform(target.data);
     });
+
+  console.log({ targets });
 
   if (requestedScreenReader && targets.length === 0) {
     throw new Error(
