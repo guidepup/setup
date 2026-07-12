@@ -1,5 +1,5 @@
 import { writeFileSync } from "fs";
-import { ERR_MACOS_UNABLE_TO_WRITE_DATABASE_FILE } from "../../../errors";
+import { ERR_SETUP_MACOS_UNABLE_TO_WRITE_DATABASE_FILE } from "../../../errors";
 
 export function writeDatabaseFile(): void {
   try {
@@ -8,6 +8,6 @@ export function writeDatabaseFile(): void {
       "a",
     );
   } catch (cause) {
-    throw new Error(ERR_MACOS_UNABLE_TO_WRITE_DATABASE_FILE, { cause });
+    throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_DATABASE_FILE, { cause });
   }
 }

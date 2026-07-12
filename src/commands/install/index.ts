@@ -1,10 +1,40 @@
 import { Command } from "commander";
+import {
+  handleInstallComplete,
+  handleInstallError,
+  logInfo,
+} from "../../logging";
+import {
+  type InstallTarget,
+  resolveGuidepupManifest,
+  selectInstallTargets,
+} from "./manifest";
+
+async function install(screenreader?: string): Promise<void> {
+  let targets: InstallTarget[];
+
+  try {
+    const manifest = resolveGuidepupManifest();
+
+    targets = selectInstallTargets(manifest, screenreader);
+  } catch (error) {
+    handleInstallError(error);
+  }
+
+  if (targets.length === 0) {
+    logInfo("No installable screen readers were found for this environment");
+  } else {
+    logInfo(
+      `Resolved ${targets.length} install target(s): ${targets.map((target) => target.name).join(", ")}`,
+    );
+  }
+
+  handleInstallComplete();
+}
 
 export function installCommand() {
   return new Command("install")
     .description("Install screen readers.")
     .argument("[screenreader]", "screen readers to install")
-    .action((screenreader?: string) => {
-      console.log("TODO", { screenreader });
-    });
+    .action(install);
 }

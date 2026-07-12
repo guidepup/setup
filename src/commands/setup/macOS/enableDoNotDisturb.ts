@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import { ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB } from "../../../errors";
+import { ERR_SETUP_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB } from "../../../errors";
 import { runAppleScript } from "./runAppleScript";
 import { retryOnError } from "./retryOnError";
 import { getPlatformVersionMajor } from "./getPlatformVersionMajor";
@@ -116,6 +116,6 @@ export async function enableDoNotDisturb() {
       );
     }
   } catch (cause) {
-    throw new Error(ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB, { cause });
+    throw new Error(ERR_SETUP_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB, { cause });
   }
 }

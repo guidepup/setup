@@ -1,6 +1,6 @@
 import { release } from "os";
 import { execSync } from "child_process";
-import { ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../../../errors";
+import { ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../../../errors";
 
 const epoch = +Date.now();
 
@@ -198,7 +198,7 @@ export function updateTccDb(path: string): void {
         encoding: "utf8",
       });
     } catch (cause) {
-      throw new Error(ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, { cause });
+      throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, { cause });
     }
   }
 }

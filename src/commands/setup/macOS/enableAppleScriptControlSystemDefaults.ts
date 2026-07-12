@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS } from "../../../errors";
+import { ERR_SETUP_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS } from "../../../errors";
 
 export function enableAppleScriptControlSystemDefaults(): void {
   try {
@@ -10,6 +10,6 @@ export function enableAppleScriptControlSystemDefaults(): void {
 
     return;
   } catch (cause) {
-    throw new Error(ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS, { cause });
+    throw new Error(ERR_SETUP_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS, { cause });
   }
 }

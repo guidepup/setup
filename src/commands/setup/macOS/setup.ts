@@ -8,7 +8,7 @@ import { writeDatabaseFile } from "./writeDatabaseFile";
 import { SYSTEM_PATH, USER_PATH, updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
 import { handleSetupManualRequired, handleWarning } from "../../../logging";
-import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../../../errors";
+import { ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../../../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 
@@ -85,7 +85,7 @@ export async function setup({
     }
 
     if (ci) {
-      throw new Error(ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION);
+      throw new Error(ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION);
     }
 
     handleSetupManualRequired();

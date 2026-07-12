@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS } from "../../../errors";
+import { ERR_SETUP_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS } from "../../../errors";
 
 export function disableDictationInputAutoEnable(): void {
   try {
@@ -8,6 +8,6 @@ export function disableDictationInputAutoEnable(): void {
       { encoding: "utf8" },
     );
   } catch (cause) {
-    throw new Error(ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS, { cause });
+    throw new Error(ERR_SETUP_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS, { cause });
   }
 }

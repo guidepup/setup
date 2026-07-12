@@ -1,8 +1,8 @@
 import { platform } from "node:os";
 import { Command } from "commander";
 import { setup as setupMacOS } from "./macOS/setup";
-import { ERR_UNSUPPORTED_OS } from "../../errors";
-import { handleError, handleSetupComplete } from "../../logging";
+import { ERR_SETUP_UNSUPPORTED_OS } from "../../errors";
+import { handleSetupError, handleSetupComplete } from "../../logging";
 
 interface SetupCommandOptions {
   ci: boolean;
@@ -24,11 +24,11 @@ async function setup(options: SetupCommandOptions): Promise<void> {
         break;
       }
       default: {
-        throw new Error(ERR_UNSUPPORTED_OS);
+        throw new Error(ERR_SETUP_UNSUPPORTED_OS);
       }
     }
-  } catch (e) {
-    handleError(e);
+  } catch (error) {
+    handleSetupError(error);
   }
 
   handleSetupComplete();

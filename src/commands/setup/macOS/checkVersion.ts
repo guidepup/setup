@@ -4,8 +4,8 @@
 import { readFileSync } from "node:fs";
 import { satisfies } from "semver";
 import {
-  ERR_MACOS_UNABLE_TO_VERIFY_VERSION,
-  ERR_MACOS_UNSUPPORTED_VERSION,
+  ERR_SETUP_MACOS_UNABLE_TO_VERIFY_VERSION,
+  ERR_SETUP_MACOS_UNSUPPORTED_VERSION,
 } from "../../../errors";
 
 function clean(version: string): string {
@@ -29,12 +29,12 @@ export function checkVersion(): void {
     /<key>ProductVersion<\/key>\s*<string>([\d.]+)<\/string>/.exec(plist);
 
   if (!matches) {
-    throw new Error(ERR_MACOS_UNABLE_TO_VERIFY_VERSION);
+    throw new Error(ERR_SETUP_MACOS_UNABLE_TO_VERIFY_VERSION);
   }
 
   const version = clean(matches[1].replace("10.16", "11"));
 
   if (!satisfies(version, ">=11.0.0")) {
-    throw new Error(ERR_MACOS_UNSUPPORTED_VERSION);
+    throw new Error(ERR_SETUP_MACOS_UNSUPPORTED_VERSION);
   }
 }
