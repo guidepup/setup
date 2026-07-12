@@ -6,15 +6,15 @@
 
 ## [Documentation](https://www.guidepup.dev/docs/guides/automated-environment-setup)
 
-[![MacOS Sonoma Support](https://img.shields.io/badge/macos-Somona-blue.svg?logo=apple)](https://apps.apple.com/us/app/macos-sonoma/id6450717509)
-[![MacOS Sequoia Support](https://img.shields.io/badge/macos-Sequoia-blue.svg?logo=apple)](https://apps.apple.com/us/app/macos-sequoia/id6596773750)
-[![MacOS Tahoe Support](https://img.shields.io/badge/macos-Tahoe-blue.svg?logo=apple)](https://www.apple.com/uk/os/macos/)
+[![macOS Sonoma Support](https://img.shields.io/badge/macos-Somona-blue.svg?logo=apple)](https://apps.apple.com/us/app/macos-sonoma/id6450717509)
+[![macOS Sequoia Support](https://img.shields.io/badge/macos-Sequoia-blue.svg?logo=apple)](https://apps.apple.com/us/app/macos-sequoia/id6596773750)
+[![macOS Tahoe Support](https://img.shields.io/badge/macos-Tahoe-blue.svg?logo=apple)](https://www.apple.com/uk/os/macos/)
 [![Windows Server 2022 Support](https://img.shields.io/badge/windows_server-2022-blue.svg?logo=windows)](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022)
 [![Windows Server 2025 Support](https://img.shields.io/badge/windows_server-2025-blue.svg?logo=windows)](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2025)
 
 This package sets up your environment for screen reader automation.
 
-It enables automation for <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on MacOS</b></a> and <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>.
+It enables automation for <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a> and <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>.
 
 ## Getting Started
 
@@ -37,7 +37,7 @@ If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action
   uses: guidepup/setup-action
 ```
 
-### MacOS
+### macOS
 
 If you are running this command locally you may need to take some manual steps to complete setup by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
 
@@ -49,12 +49,12 @@ If you are running this command in CI/CD, it is recommended to add the `--ci` fl
 npx @guidepup/setup --ci
 ```
 
-#### Ignore TCC.db Updates
+#### Ignore TCC Database Updates
 
-If updating the TCC.db is not possible (due to SIP) or required you can skip the database update step by using the `--ignore-tcc-db` flag:
+If updating the `TCC.db` is not possible (due to enabled SIP) or not required, you can skip the database update step by using the `--macos-ignore-tcc-db` flag:
 
 ```console
-npx @guidepup/setup --ignore-tcc-db
+npx @guidepup/setup --macos-ignore-tcc-db
 ```
 
 > [!NOTE]
@@ -62,22 +62,10 @@ npx @guidepup/setup --ignore-tcc-db
 
 #### Recording
 
-If you are encountering errors in CI for MacOS you can pass a `--record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory:
+If you are encountering errors in CI for macOS you can pass a `--macos-record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory:
 
 ```console
-npx @guidepup/setup --ci --record
-```
-
-### Windows
-
-#### NVDA Installation
-
-When running on windows a portable NVDA instance compatible with Guidepup will be installed to a temporary directory by default. The location of this installation directory is stored in the Windows registry under the key `HKCU\Software\Guidepup\Nvda`.
-
-If you want to specify the directory that NVDA is installed to you can pass a `--nvda-install-dir` flag to the command:
-
-```console
-npx @guidepup/setup --nvda-install-dir <NVDA_INSTALLATION_DIRECTORY>
+npx @guidepup/setup --ci --macos-record
 ```
 
 ##### Using HTTP / HTTPS Proxy for Installation
@@ -88,19 +76,6 @@ If you are using a proxy connection, you must define the proxy URL in an env var
 - `https_proxy`
 - `HTTP_PROXY`
 - `http_proxy`
-
-#### Foreground Timeout Lock
-
-Modern versions of Windows have a setting which prevents new application instances launching in front of other applications in quick succession, requiring over 3 minutes between activations before it will actually show the window - in the interim it launches the window minimized.
-
-Many test automation frameworks will completely close down a browser after a test has finished and then launch a new instance for the next test - on Windows this suffers from the timeout lock on foreground windows. This impacts on screen reader automation which need the window to activate and focus to be able to drive the screen reader on the application.
-
-To mitigate this the setup script updates two keys in the Windows registry under `HKCU\Control Panel\Desktop`:
-
-- `ForegroundLockTimeout` - Specifies the time in milliseconds, following user input, during which the system will not allow applications to force themselves into the foreground. Defaults to `200000`.
-- `ForegroundFlashCount` - Determines the number of times the taskbar button will flash to notify the user that a background window has been activated by the system. If the time elapsed since the last user input exceeds the value of ForegroundLockTimeout, the window will automatically be brought to the foreground. Defaults to `3`.
-
-Both of these are set to `0` by the setup script.
 
 ## Powerful Tooling
 

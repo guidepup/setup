@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import { ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB } from "../errors";
+import { ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB } from "../../../errors";
 import { runAppleScript } from "./runAppleScript";
 import { retryOnError } from "./retryOnError";
 import { getPlatformVersionMajor } from "./getPlatformVersionMajor";
@@ -103,21 +103,19 @@ export async function enableDoNotDisturb() {
     if (platformMajor <= 20) {
       await promisify(exec)(enableFocusModeShellscript);
     } else if (platformMajor === 21) {
-      // From MacOS 12 Monterey (Darwin 21) there is no known way to enable DND via system defaults
+      // From macOS 12 Monterey (Darwin 21) there is no known way to enable DND via system defaults
       await retryOnError(() => runAppleScript(enableFocusModeAppleScript));
     } else {
       const { stdout: locale } = await promisify(exec)(getLocale);
 
-      // From MacOS 13 Ventura (Darwin 22) there is no known way to enable DND via system settings
+      // From macOS 13 Ventura (Darwin 22) there is no known way to enable DND via system settings
       await retryOnError(() =>
         runAppleScript(
           enableFocusModeVenturaAppleScript(locale, platformMajor),
         ),
       );
     }
-  } catch (e) {
-    throw new Error(
-      `${ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB}\n\n${e.message}`,
-    );
+  } catch (cause) {
+    throw new Error(ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB, { cause });
   }
 }

@@ -1,6 +1,6 @@
 import { release } from "os";
 import { execSync } from "child_process";
-import { ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../errors";
+import { ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../../../errors";
 
 const epoch = +Date.now();
 
@@ -197,10 +197,8 @@ export function updateTccDb(path: string): void {
       execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`, {
         encoding: "utf8",
       });
-    } catch (e) {
-      throw new Error(
-        `${ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB}\n\n${e.message}`,
-      );
+    } catch (cause) {
+      throw new Error(ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, { cause });
     }
   }
 }

@@ -1,15 +1,13 @@
 import { execSync } from "child_process";
-import { ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS } from "../errors";
+import { ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS } from "../../../errors";
 
 export function disableSplashScreenSystemDefaults(): void {
   try {
     execSync(
       "defaults write com.apple.VoiceOverTraining doNotShowSplashScreen -bool true",
-      { encoding: "utf8" }
+      { encoding: "utf8" },
     );
-  } catch (e) {
-    throw new Error(
-      `${ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS}\n\n${e.message}`
-    );
+  } catch (cause) {
+    throw new Error(ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS, { cause });
   }
 }

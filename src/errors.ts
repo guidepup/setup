@@ -10,22 +10,10 @@ export const ERR_MACOS_UNABLE_UPDATE_SYSTEM_DEFAULTS =
 export const ERR_MACOS_UNABLE_TO_VERIFY_SIP =
   "Unable to verify macOS SIP status";
 export const ERR_MACOS_UNABLE_TO_WRITE_DATABASE_FILE =
-  "Unable to write to the VoiceOver database file - SIP might not be disabled";
+  "Unable to write to the VoiceOver database file\n\nEnsure that SIP is disabled or pass '--macos-ignore-tcc-db' to ignore TCC database updates";
 export const ERR_MACOS_UNABLE_TO_WRITE_USER_TCC_DB =
-  "Unable to write to the user TCC.db - SIP might not be disabled";
-export const ERR_MACOS_UI_PROMPT_FAILURE =
-  "Unable to retrieve user input from prompt";
-export const ERR_MACOS_UI_CONTROL_NOT_CONSENTED =
-  "Consent not given for UI control";
+  "Unable to write to the user TCC database\n\nEnsure that SIP is disabled or pass '--macos-ignore-tcc-db' to ignore TCC database updates";
 export const ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION =
-  "Unable to setup environment without manual user interaction";
+  "Unable to setup environment without manual user interaction\n\nEnsure that SIP is disabled or preconfigure your environment with 'Allow VoiceOver to be controlled with AppleScript' enabled";
 export const ERR_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB =
   'Failed to enable "Do not disturb" mode';
-
-export const ERR_WINDOWS_UNABLE_TO_ACCESS_REGISTRY =
-  "Unable to access Windows registry";
-export const ERR_WINDOWS_UNABLE_TO_UPDATE_REGISTRY =
-  "Unable to update Windows registry";
-export const ERR_WINDOWS_FAILED_TO_INSTALL_NVDA = "Unable to install NVDA";
-export const ERR_WINDOWS_FAILED_TO_RESTART_EXPLORER =
-  "Unable to restart explorer.exe";

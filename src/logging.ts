@@ -4,12 +4,23 @@ export const logInfo = console.info.bind(console);
 export const logWarn = console.warn.bind(console);
 export const logError = console.error.bind(console);
 
-export function handleComplete(): never {
+export function handleSetupComplete(): never {
   logInfo("");
   logInfo(chalk.green("Environment setup complete 🎉"));
   logInfo("");
 
   process.exit(0);
+}
+
+export function handleSetupManualRequired(): void {
+  logInfo(
+    "Please complete remaining setup by following this guide:\n\n--> " +
+      chalk.underline(
+        chalk.bold(
+          "https://www.guidepup.dev/docs/guides/manual-voiceover-setup",
+        ),
+      ),
+  );
 }
 
 export function handleWarning(title: string, subtitle: string): void {
@@ -35,8 +46,8 @@ export function handleError(err: Error): never {
   logError(
     chalk.dim(
       "Please raise new issues at: " +
-        chalk.underline("https://github.com/guidepup/setup/issues")
-    )
+        chalk.underline("https://github.com/guidepup/setup/issues"),
+    ),
   );
   logError("");
 

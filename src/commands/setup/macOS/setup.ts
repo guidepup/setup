@@ -1,5 +1,4 @@
-import { platform, release } from "os";
-import chalk from "chalk";
+import { platform, release } from "node:os";
 import { checkVersion } from "./checkVersion";
 import { enableAppleScriptControlSystemDefaults } from "./enableAppleScriptControlSystemDefaults";
 import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDefaults";
@@ -8,21 +7,27 @@ import { isSipEnabled } from "./isSipEnabled";
 import { writeDatabaseFile } from "./writeDatabaseFile";
 import { SYSTEM_PATH, USER_PATH, updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
-import { handleWarning, logInfo } from "../logging";
-import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../errors";
+import { handleSetupManualRequired, handleWarning } from "../../../logging";
+import { ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../../../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 
-const isCi = process.argv.includes("--ci");
-const ignoreTccDb = process.argv.includes("--ignore-tcc-db");
-const isRecorded = process.argv.includes("--record");
+interface MacOSSetupOptions {
+  ci?: boolean;
+  macosIgnoreTccDb?: boolean;
+  macosRecord?: boolean;
+}
 
-export async function setup(): Promise<void> {
-  if (!ignoreTccDb) {
+export async function setup({
+  ci = false,
+  macosIgnoreTccDb = false,
+  macosRecord = false,
+}: MacOSSetupOptions = {}): Promise<void> {
+  if (!macosIgnoreTccDb) {
     try {
       updateTccDb(USER_PATH);
     } catch (e) {
-      if (isCi) {
+      if (ci) {
         throw e;
       }
     }
@@ -34,7 +39,7 @@ export async function setup(): Promise<void> {
     }
   } else {
     handleWarning(
-      "Ignoring TCC.db updates",
+      "Ignoring TCC database updates",
       "If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation.",
     );
   }
@@ -44,7 +49,7 @@ export async function setup(): Promise<void> {
 
   let stopRecording: () => void = () => null;
 
-  if (isRecorded) {
+  if (macosRecord) {
     try {
       const { macOSRecord } = await import("@guidepup/record");
 
@@ -54,7 +59,7 @@ export async function setup(): Promise<void> {
     } catch {
       handleWarning(
         "@guidepup/record not available",
-        "Recording will be skipped. This is expected on platforms without ffmpeg support (e.g., Windows ARM64).",
+        "Recording will be skipped. This is expected on platforms without ffmpeg support.",
       );
     }
   }
@@ -65,7 +70,7 @@ export async function setup(): Promise<void> {
     disableSplashScreenSystemDefaults();
     disableDictationInputAutoEnable();
 
-    if (isCi) {
+    if (ci) {
       await enableDoNotDisturb();
     }
 
@@ -79,18 +84,11 @@ export async function setup(): Promise<void> {
       return;
     }
 
-    if (isCi) {
+    if (ci) {
       throw new Error(ERR_MACOS_REQUIRES_MANUAL_USER_INTERACTION);
     }
 
-    logInfo(
-      "Please complete remaining setup by following this guide:\n\n--> " +
-        chalk.underline(
-          chalk.bold(
-            "https://www.guidepup.dev/docs/guides/manual-voiceover-setup",
-          ),
-        ),
-    );
+    handleSetupManualRequired();
   } finally {
     stopRecording();
   }

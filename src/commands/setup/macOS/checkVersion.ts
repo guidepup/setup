@@ -1,12 +1,12 @@
 // Derived from https://github.com/sindresorhus/macos-version
 // MIT License Copyright (c) Sindre Sorhus
 
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import { satisfies } from "semver";
 import {
   ERR_MACOS_UNABLE_TO_VERIFY_VERSION,
   ERR_MACOS_UNSUPPORTED_VERSION,
-} from "../errors";
+} from "../../../errors";
 
 function clean(version: string): string {
   const { length } = version.split(".");
@@ -23,7 +23,7 @@ function clean(version: string): string {
 export function checkVersion(): void {
   const plist = readFileSync(
     "/System/Library/CoreServices/SystemVersion.plist",
-    "utf8"
+    "utf8",
   );
   const matches =
     /<key>ProductVersion<\/key>\s*<string>([\d.]+)<\/string>/.exec(plist);

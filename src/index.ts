@@ -1,28 +1,25 @@
-import { setup as setupMacOS } from "./macOS/setup";
-import { setup as setupWindows } from "./windows/setup";
-import { handleError, handleComplete } from "./logging";
-import { ERR_UNSUPPORTED_OS } from "./errors";
+import { Command } from "commander";
+import { setupCommand } from "./commands/setup";
+import { installCommand } from "./commands/install";
 
-async function run(): Promise<void> {
-  try {
-    switch (process.platform) {
-      case "darwin": {
-        await setupMacOS();
-        break;
-      }
-      case "win32": {
-        await setupWindows();
-        break;
-      }
-      default: {
-        throw new Error(ERR_UNSUPPORTED_OS);
-      }
-    }
-  } catch (e) {
-    handleError(e);
-  }
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { version } = require("../package.json");
 
-  handleComplete();
+function createProgram(): Command {
+  const program = new Command();
+
+  program
+    .name("guidepup")
+    .description(
+      "Configure the local environment and manage screen readers for Guidepup.",
+    )
+    .version(version, "-v, --version", "Display the CLI version.");
+
+  program.addCommand(setupCommand());
+
+  program.addCommand(installCommand());
+
+  return program;
 }
 
-run();
+createProgram().parseAsync(process.argv);
