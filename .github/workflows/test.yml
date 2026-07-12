@@ -53,3 +53,21 @@ jobs:
           name: artifacts-test-ignore-tcc-db-${{ matrix.os }}
           path: |
             **/recordings/**/*
+
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: |
+          tmpdir=$(mktemp -d)
+          cd "$tmpdir"
+          npm init -y
+          npm install @guidepup/guidepup
+          npm install -g "${GITHUB_WORKSPACE}"
+          export PATH="$(npm bin -g):$PATH"
+          guidepup install
