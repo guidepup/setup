@@ -4,23 +4,22 @@ import {
   handleInstallError,
   logInfo,
 } from "../../logging";
-import {
-  type InstallTarget,
-  resolveGuidepupManifest,
-  selectInstallTargets,
-} from "./manifest";
+import { selectTargets } from "./select-targets";
+import { resolveManifest } from "./resolve-manifest";
+import type { ScreenReader } from "./types";
+import { resolveCachePath } from "./resolve-cache-path";
+import { downloadAssets } from "./download-assets";
 
-async function install(screenreader?: string): Promise<void> {
-  let targets: InstallTarget[];
-
-  console.log({ screenreader });
+async function install(requestedScreenReaderIds?: string[]): Promise<void> {
+  let targets: ScreenReader[];
 
   try {
-    const manifest = resolveGuidepupManifest();
+    const manifest = resolveManifest();
+    const cachePath = resolveCachePath();
 
-    console.log({ manifest });
+    targets = selectTargets(manifest, requestedScreenReaderIds);
 
-    targets = selectInstallTargets(manifest, screenreader);
+    await downloadAssets(cachePath, targets);
   } catch (error) {
     handleInstallError(error);
   }
@@ -39,6 +38,6 @@ async function install(screenreader?: string): Promise<void> {
 export function installCommand() {
   return new Command("install")
     .description("Install screen readers.")
-    .argument("[screenreader]", "screen readers to install")
+    .argument("[screenReaders...]", "Screen readers to install")
     .action(install);
 }

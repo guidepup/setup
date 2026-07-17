@@ -31,6 +31,10 @@ export function handleSetupManualRequired(): void {
   );
 }
 
+export function handleDownload(message, urlOrPath) {
+  logInfo(message + chalk.dim(urlOrPath));
+}
+
 export function handleWarning(title: string, subtitle: string): void {
   logWarn("");
   logWarn(chalk.bold(chalk.yellow(`[!] Warning: ${chalk.bold(title)}`)));

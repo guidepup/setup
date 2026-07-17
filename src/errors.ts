@@ -24,5 +24,15 @@ export const ERR_INSTALL_GUIDEPUP_MANIFEST_INVALID =
   "The installed '@guidepup/guidepup' manifest appears to be invalid or corrupted\n\nPlease re-install '@guidepup/guidepup'";
 export const ERR_INSTALL_GUIDEPUP_MANIFEST_UNSUPPORTED_SCHEMA =
   "Unsupported manifest schema version\n\nPlease upgrade '@guidepup/setup'";
-export const ERR_INSTALL_GUIDEPUP_SCREEN_READER_UNAVAILABLE =
+export const ERR_INSTALL_SCREEN_READER_UNAVAILABLE =
   "The requested screen reader is not available for this platform";
+export const ERR_INSTALL_SCREEN_READER_ASSET_UNAVAILABLE =
+  "The requested screen reader asset is not available for this platform";
+export const ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH =
+  "Unable to resolve or create the Guidepup cache path";
+export const ERR_INSTALL_FAILED_TO_DOWNLOAD_ASSET =
+  "Failed to download Guidepup cache asset";
+export const ERR_INSTALL_FAILED_TO_VERIFY_CHECKSUM =
+  "Failed to verify Guidepup cache asset checksum";
+export const ERR_INSTALL_INVALID_CHECKSUM =
+  "Guidepup cache asset checksum verification failed";
