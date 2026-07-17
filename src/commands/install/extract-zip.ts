@@ -17,6 +17,7 @@ export async function extractZip(
   try {
     files = await decompress(source, destination);
   } catch (cause) {
+    console.log(cause); // TODO: remove
     handleInfoWithPath("Unable to extract from", source);
 
     await deleteAsset(source);
