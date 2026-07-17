@@ -100,6 +100,21 @@ If you are using a proxy connection, you must define the proxy URL in an env var
 - `NO_PROXY`
 - `no_proxy`
 
+### Global Install
+
+You can also install the CLI globally:
+
+```console
+npm install -g @guidepup/setup
+```
+
+After which you can access the CLI through the `guidepup` command:
+
+```console
+guidepup setup
+guidepup install
+```
+
 ## Powerful Tooling
 
 Check out some of the other Guidepup modules:
