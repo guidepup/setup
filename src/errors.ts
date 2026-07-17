@@ -36,3 +36,7 @@ export const ERR_INSTALL_FAILED_TO_VERIFY_CHECKSUM =
   "Failed to verify Guidepup cache asset checksum";
 export const ERR_INSTALL_INVALID_CHECKSUM =
   "Guidepup cache asset checksum verification failed";
+export const ERR_INSTALL_FAILED_TO_EXTRACT_ASSET =
+  "Failed to extract Guidepup cache asset";
+export const ERR_INSTALL_EMPTY_EXTRACTED_ASSET =
+  "Extracted Guidepup cache asset is empty";

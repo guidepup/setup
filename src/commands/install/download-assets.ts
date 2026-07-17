@@ -2,13 +2,14 @@ import { platform, release } from "node:os";
 import { dirname, join } from "node:path";
 import { mkdirSync } from "node:fs";
 import type { Asset, ScreenReader } from "./types";
+import { verifyCachedAssetChecksum } from "./verify-cached-asset-checksum";
+import { downloadAsset } from "./download-asset";
+import { verifyAssetChecksum } from "./verify-asset-checksum";
+import { extractZip } from "./extract-zip";
 import {
   ERR_INSTALL_SCREEN_READER_ASSET_UNAVAILABLE,
   ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH,
 } from "../../errors";
-import { verifyCachedAssetChecksum } from "./verify-cached-asset-checksum";
-import { downloadAsset } from "./download-asset";
-import { verifyAssetChecksum } from "./verify-asset-checksum";
 import { handleInfoWithPath } from "../../logging";
 
 function platformMajorVersion(): string {
@@ -40,7 +41,7 @@ async function downloadScreenReader(
 ): Promise<void> {
   const asset = selectAsset(screenReader);
 
-  const destination = join(
+  const downloadDestination = join(
     cachePath,
     screenReader.id,
     asset.platformVersion ?? "",
@@ -51,17 +52,17 @@ async function downloadScreenReader(
   const currentPlatform = platform();
   const versionMessage = `${asset.version}${asset.platformVersion ? ` - ${currentPlatform} ${asset.platformVersion}` : ""}`;
 
-  if (await verifyCachedAssetChecksum(destination, asset.sha256)) {
+  if (await verifyCachedAssetChecksum(downloadDestination, asset.sha256)) {
     handleInfoWithPath(
       `${screenReader.name} (${versionMessage}) already in cache at`,
-      destination,
+      downloadDestination,
     );
 
     return;
   }
 
   try {
-    mkdirSync(dirname(destination), { recursive: true });
+    mkdirSync(dirname(downloadDestination), { recursive: true });
   } catch (cause) {
     throw new Error(
       ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH,
@@ -76,14 +77,36 @@ async function downloadScreenReader(
     source,
   );
 
-  await downloadAsset(asset, source, destination);
+  await downloadAsset(asset, source, downloadDestination);
 
   handleInfoWithPath(
-    `${screenReader.name} (${versionMessage}) downloaded to`,
-    destination,
+    `${screenReader.name} (${versionMessage}) successfully downloaded to`,
+    downloadDestination,
   );
 
-  await verifyAssetChecksum(destination, asset.sha256);
+  await verifyAssetChecksum(downloadDestination, asset.sha256);
+
+  if (asset.asset.endsWith(".zip")) {
+    const unzipDestination = join(
+      cachePath,
+      screenReader.id,
+      asset.platformVersion ?? "",
+      asset.version,
+      "extracted",
+    );
+
+    handleInfoWithPath(
+      `Extracting ${screenReader.name} (${versionMessage}) from`,
+      downloadDestination,
+    );
+
+    await extractZip(asset, downloadDestination, unzipDestination);
+
+    handleInfoWithPath(
+      `${screenReader.name} (${versionMessage}) successfully extracted to`,
+      unzipDestination,
+    );
+  }
 }
 
 export async function downloadAssets(

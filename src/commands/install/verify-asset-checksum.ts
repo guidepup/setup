@@ -1,23 +1,13 @@
 import type { Stats } from "node:fs";
-import { rm, stat } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import { sha256 } from "./sha256";
+import { deleteAsset } from "./delete-asset";
 import {
   ERR_INSTALL_FAILED_TO_DOWNLOAD_ASSET,
   ERR_INSTALL_FAILED_TO_VERIFY_CHECKSUM,
   ERR_INSTALL_INVALID_CHECKSUM,
 } from "../../errors";
 import { handleInfoWithPath } from "../../logging";
-
-async function deleteAsset(assetPath: string): Promise<void> {
-  handleInfoWithPath("Removing", assetPath);
-
-  try {
-    await rm(assetPath, { force: true });
-  } catch {
-    // Ignore cleanup failures, preferring to expose the error that triggered
-    // cleanup.
-  }
-}
 
 export async function verifyAssetChecksum(
   assetPath: string,
