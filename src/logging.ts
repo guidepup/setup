@@ -4,6 +4,22 @@ export const logInfo = console.info.bind(console);
 export const logWarn = console.warn.bind(console);
 export const logError = console.error.bind(console);
 
+export function handleNoInstallation(): never {
+  handleWarning(
+    "No installable screen readers were found for this environment",
+    "Consider contributing to Guidepup?",
+  );
+  logInfo(
+    chalk.dim(
+      "Please raise new issues at: " +
+        chalk.underline("https://github.com/guidepup/setup/issues"),
+    ),
+  );
+  logInfo("");
+
+  process.exit(0);
+}
+
 export function handleInstallComplete(): never {
   logInfo("");
   logInfo(chalk.green("Installation complete 🎉"));
@@ -31,8 +47,8 @@ export function handleSetupManualRequired(): void {
   );
 }
 
-export function handleDownload(message, urlOrPath) {
-  logInfo(message + chalk.dim(urlOrPath));
+export function handleInfoWithPath(message, urlOrPath) {
+  logInfo(`${message} ${chalk.dim(urlOrPath)}`);
 }
 
 export function handleWarning(title: string, subtitle: string): void {

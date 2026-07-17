@@ -7,9 +7,9 @@ import {
   ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH,
 } from "../../errors";
 import { verifyCachedAssetChecksum } from "./verify-cached-asset-checksum";
-import { downloadReleaseAsset } from "./download-release-asset";
+import { downloadAsset } from "./download-asset";
 import { verifyAssetChecksum } from "./verify-asset-checksum";
-import { handleDownload } from "../../logging";
+import { handleInfoWithPath } from "../../logging";
 
 function platformMajorVersion(): string {
   return release().split(".", 1)[0];
@@ -52,7 +52,7 @@ async function downloadScreenReader(
   const versionMessage = `${asset.version}${asset.platformVersion ? ` - ${currentPlatform} ${asset.platformVersion}` : ""}`;
 
   if (await verifyCachedAssetChecksum(destination, asset.sha256)) {
-    handleDownload(
+    handleInfoWithPath(
       `${screenReader.name} (${versionMessage}) already in cache at`,
       destination,
     );
@@ -69,16 +69,16 @@ async function downloadScreenReader(
     );
   }
 
-  const source = `https://github.com/${asset.repository}/releases/download/v${asset.version}/${asset.asset}`;
+  const source = `https://github.com/${asset.repository}/releases/download/${asset.version}/${asset.asset}`;
 
-  handleDownload(
+  handleInfoWithPath(
     `Downloading ${screenReader.name} (${versionMessage}) from`,
     source,
   );
 
-  await downloadReleaseAsset(asset, source, destination);
+  await downloadAsset(asset, source, destination);
 
-  handleDownload(
+  handleInfoWithPath(
     `${screenReader.name} (${versionMessage}) downloaded to`,
     destination,
   );

@@ -6,8 +6,11 @@ import {
   ERR_INSTALL_FAILED_TO_VERIFY_CHECKSUM,
   ERR_INSTALL_INVALID_CHECKSUM,
 } from "../../errors";
+import { handleInfoWithPath } from "../../logging";
 
 async function deleteAsset(assetPath: string): Promise<void> {
+  handleInfoWithPath("Removing", assetPath);
+
   try {
     await rm(assetPath, { force: true });
   } catch {
@@ -37,6 +40,8 @@ export async function verifyAssetChecksum(
   try {
     actualSha256 = await sha256(assetPath);
   } catch (cause) {
+    handleInfoWithPath("Unable to verify checksum for", assetPath);
+
     await deleteAsset(assetPath);
 
     throw new Error(ERR_INSTALL_FAILED_TO_VERIFY_CHECKSUM, { cause });
@@ -45,6 +50,8 @@ export async function verifyAssetChecksum(
   if (actualSha256 === expectedSha256) {
     return;
   }
+
+  handleInfoWithPath("Checksum verification failed for", assetPath);
 
   await deleteAsset(assetPath);
 

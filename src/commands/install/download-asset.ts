@@ -3,7 +3,7 @@ import { pipeline } from "node:stream/promises";
 import type { Asset } from "./types";
 import { ERR_INSTALL_FAILED_TO_DOWNLOAD_ASSET } from "../../errors";
 
-export async function downloadReleaseAsset(
+export async function downloadAsset(
   asset: Asset,
   source: string,
   destination: string,

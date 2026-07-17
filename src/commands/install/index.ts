@@ -2,7 +2,7 @@ import { Command } from "commander";
 import {
   handleInstallComplete,
   handleInstallError,
-  logInfo,
+  handleNoInstallation,
 } from "../../logging";
 import { selectTargets } from "./select-targets";
 import { resolveManifest } from "./resolve-manifest";
@@ -15,21 +15,17 @@ async function install(requestedScreenReaderIds?: string[]): Promise<void> {
 
   try {
     const manifest = resolveManifest();
-    const cachePath = resolveCachePath();
 
     targets = selectTargets(manifest, requestedScreenReaderIds);
 
+    if (targets.length === 0) {
+      handleNoInstallation();
+    }
+
+    const cachePath = resolveCachePath();
     await downloadAssets(cachePath, targets);
   } catch (error) {
     handleInstallError(error);
-  }
-
-  if (targets.length === 0) {
-    logInfo("No installable screen readers were found for this environment");
-  } else {
-    logInfo(
-      `Resolved ${targets.length} install target(s): ${targets.map((target) => target.name).join(", ")}`,
-    );
   }
 
   handleInstallComplete();

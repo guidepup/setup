@@ -51,6 +51,8 @@ function validateAsset(asset: unknown): asset is Asset {
   ) {
     return false;
   }
+
+  return true;
 }
 
 function validateAssets(assets: unknown): assets is Asset[] {
