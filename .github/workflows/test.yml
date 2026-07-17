@@ -77,7 +77,8 @@ jobs:
           node-version-file: .nvmrc
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - run: |
+      - shell: bash
+        run: |
           tmpdir=$(mktemp -d)
           cd "$tmpdir"
           npm init -y
