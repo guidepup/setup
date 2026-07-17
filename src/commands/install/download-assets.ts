@@ -8,7 +8,7 @@ import { verifyAssetChecksum } from "./verify-asset-checksum";
 import { extractZip } from "./extract-zip";
 import {
   ERR_INSTALL_SCREEN_READER_ASSET_UNAVAILABLE,
-  ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH,
+  ERR_INSTALL_UNABLE_TO_CREATE_GUIDEPUP_CACHE_ASSET_PATH,
 } from "../../errors";
 import { handleInfoWithPath } from "../../logging";
 
@@ -65,7 +65,7 @@ async function downloadScreenReader(
     mkdirSync(dirname(downloadDestination), { recursive: true });
   } catch (cause) {
     throw new Error(
-      ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH,
+      ERR_INSTALL_UNABLE_TO_CREATE_GUIDEPUP_CACHE_ASSET_PATH,
       cause,
     );
   }

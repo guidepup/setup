@@ -60,14 +60,10 @@ export function handleWarning(title: string, subtitle: string): void {
 }
 
 export function handleInstallError(err: Error): never {
-  let message = err.message;
-
-  if (err.name) {
-    message = `${err.name}: ${message}`;
-  }
+  const message = `${err.name}: ${err.message}`;
 
   logError("");
-  logError(chalk.bold(chalk.red(`[!] ${chalk.bold(message.toString())}`)));
+  logError(chalk.bold(chalk.red(`[!] ${chalk.bold(message)}`)));
   logError("");
   logError("Unable to complete screen reader installation");
   logError("");
@@ -78,6 +74,11 @@ export function handleInstallError(err: Error): never {
     ),
   );
   logError("");
+
+  if (err.cause && Error.isError(err.cause)) {
+    logError(chalk.dim(`Cause: ${err.cause.name}: ${err.cause.message}`));
+    logError("");
+  }
 
   process.exit(1);
 }
