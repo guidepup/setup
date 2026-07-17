@@ -1,27 +1,34 @@
-import decompress from "decompress";
+import { readdir } from "node:fs/promises";
+import extract from "extract-zip";
 import {
   ERR_INSTALL_EMPTY_EXTRACTED_ASSET,
   ERR_INSTALL_FAILED_TO_EXTRACT_ASSET,
 } from "../../errors";
+import { handleInfoWithPath } from "../../logging";
 import type { Asset } from "./types";
 import { deleteAsset } from "./delete-asset";
-import { handleInfoWithPath } from "../../logging";
+
+async function deleteAssets(...assets) {
+  for (const asset of assets) {
+    await deleteAsset(asset);
+  }
+}
 
 export async function extractZip(
   asset: Asset,
   source: string,
   destination: string,
 ): Promise<void> {
-  let files: never[];
+  let files: string[];
 
   try {
-    files = await decompress(source, destination);
+    await extract(source, { dir: destination });
+
+    files = await readdir(destination);
   } catch (cause) {
-    console.log(cause); // TODO: remove
     handleInfoWithPath("Unable to extract from", source);
 
-    await deleteAsset(source);
-    await deleteAsset(destination);
+    await deleteAssets(source, destination);
 
     throw new Error(`${ERR_INSTALL_FAILED_TO_EXTRACT_ASSET}: ${asset.asset}`, {
       cause,
@@ -31,8 +38,7 @@ export async function extractZip(
   if (!files.length) {
     handleInfoWithPath("Extracted asset is empty at", destination);
 
-    await deleteAsset(source);
-    await deleteAsset(destination);
+    await deleteAssets(source, destination);
 
     throw new Error(`${ERR_INSTALL_EMPTY_EXTRACTED_ASSET}: ${asset.asset}`);
   }
