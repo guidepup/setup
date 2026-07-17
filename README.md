@@ -28,39 +28,38 @@ And get cracking with your screen reader automation code!
 
 ## Usage
 
-### GitHub Actions
+### Setup
 
-If you are using GitHub Actions, check out the dedicated [`guidepup/setup-action`](https://github.com/marketplace/actions/guidepup-setup):
+This subcommand allows you to setup an OS environment ready for screen reader automation.
 
-```yaml
-- name: Setup Environment
-  uses: guidepup/setup-action
+```console
+npx @guidepup/setup setup
 ```
-
-### macOS
-
-If you are running this command locally you may need to take some manual steps to complete setup by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
 
 #### CI
 
-If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent interactive prompts:
+If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent prompts for manual interaction:
 
 ```console
-npx @guidepup/setup --ci
+npx @guidepup/setup setup --ci
 ```
 
-#### Ignore TCC Database Updates
+#### macOS
 
-If updating the `TCC.db` is not possible (due to enabled SIP) or not required, you can skip the database update step by using the `--macos-ignore-tcc-db` flag:
+If you are running this command locally you may need to take some manual steps to complete setup by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
+
+##### Ignore TCC Database Updates
+
+If updating the `TCC.db` is not possible (due to enabled SIP) or not required for your macOS setup, you can skip the database update step by using the `--macos-ignore-tcc-db` flag:
 
 ```console
-npx @guidepup/setup --macos-ignore-tcc-db
+npx @guidepup/setup setup --macos-ignore-tcc-db
 ```
 
 > [!NOTE]
 > If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation.
 
-#### Recording
+##### Recording
 
 If you are encountering errors in CI for macOS you can pass a `--macos-record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory:
 
@@ -68,7 +67,29 @@ If you are encountering errors in CI for macOS you can pass a `--macos-record` f
 npx @guidepup/setup --ci --macos-record
 ```
 
-##### Using HTTP / HTTPS Proxy for Installation
+### Install
+
+This subcommand allows you to install screen readers and their assets to use in screen reader automation with [Guidepup](https://www.guidepup.dev/).
+
+```console
+npx @guidepup/setup install
+```
+
+By default VoiceOver is installed on macOS, and NVDA is installed on Windows.
+
+To install a specific screen reader you can pass it to the command as an argument:
+
+```console
+npx @guidepup/setup install voiceover
+npx @guidepup/setup install nvda
+```
+
+Screen reader options include:
+
+- `voiceover` on macOS (default)
+- `nvda` on Windows (default)
+
+#### Using HTTP / HTTPS Proxy for Installation
 
 If you are using a proxy connection, you must define the proxy URL in an env variable. You can use any of the following variables:
 
@@ -76,6 +97,8 @@ If you are using a proxy connection, you must define the proxy URL in an env var
 - `https_proxy`
 - `HTTP_PROXY`
 - `http_proxy`
+- `NO_PROXY`
+- `no_proxy`
 
 ## Powerful Tooling
 

@@ -40,7 +40,7 @@ export function setupCommand() {
       "Configure the local environment for screen reader automation.",
     )
     .option("--ci", "Enable CI-specific behavior during setup.")
-    .option("--macos-ignore-tcc-db", "Skip macOS TCC database updates.")
-    .option("--macos-record", "Screen record the macOS setup.")
+    .option("--macos-ignore-tcc-db", "Skip the TCC database updates on macOS.")
+    .option("--macos-record", "Screen record the setup on macOS.")
     .action(setup);
 }
