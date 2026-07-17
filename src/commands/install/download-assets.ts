@@ -11,6 +11,7 @@ import {
   ERR_INSTALL_UNABLE_TO_CREATE_GUIDEPUP_CACHE_ASSET_PATH,
 } from "../../errors";
 import { handleInfoWithPath } from "../../logging";
+import { getPlatformVersion } from "./get-platform-version";
 
 function platformMajorVersion(): string {
   return release().split(".", 1)[0];
@@ -44,7 +45,7 @@ async function downloadScreenReader(
   const downloadDestination = join(
     cachePath,
     screenReader.id,
-    asset.platformVersion ?? "*",
+    getPlatformVersion(asset),
     asset.version,
     asset.asset,
   );
@@ -61,13 +62,14 @@ async function downloadScreenReader(
     return;
   }
 
+  const downloadDestinationDirectory = dirname(downloadDestination);
+
   try {
-    mkdirSync(dirname(downloadDestination), { recursive: true });
+    mkdirSync(downloadDestinationDirectory, { recursive: true });
   } catch (cause) {
-    throw new Error(
-      ERR_INSTALL_UNABLE_TO_CREATE_GUIDEPUP_CACHE_ASSET_PATH,
+    throw new Error(ERR_INSTALL_UNABLE_TO_CREATE_GUIDEPUP_CACHE_ASSET_PATH, {
       cause,
-    );
+    });
   }
 
   const source = `https://github.com/${asset.repository}/releases/download/${asset.version}/${asset.asset}`;
@@ -90,7 +92,7 @@ async function downloadScreenReader(
     const unzipDestination = join(
       cachePath,
       screenReader.id,
-      asset.platformVersion ?? "*",
+      getPlatformVersion(asset),
       asset.version,
       "extracted",
     );

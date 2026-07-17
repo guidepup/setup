@@ -2,6 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { deleteAsset } from "./delete-asset";
 import { resolveManifest } from "./resolve-manifest";
+import { getPlatformVersion } from "./get-platform-version";
 
 export async function pruneCache(cachePath: string): Promise<void> {
   const required = new Set<string>();
@@ -34,7 +35,7 @@ export async function pruneCache(cachePath: string): Promise<void> {
       for (const screenReader of manifest.screenReaders) {
         for (const asset of screenReader.assets) {
           required.add(
-            join(screenReader.id, asset.platformVersion ?? "*", asset.version),
+            join(screenReader.id, getPlatformVersion(asset), asset.version),
           );
         }
       }

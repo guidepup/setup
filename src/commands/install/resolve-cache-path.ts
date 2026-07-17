@@ -27,7 +27,7 @@ export function resolveCachePath() {
   } catch (cause) {
     throw new Error(
       ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH,
-      cause,
+      { cause },
     );
   }
 
