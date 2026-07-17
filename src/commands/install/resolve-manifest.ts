@@ -10,7 +10,7 @@ import { validateManifest } from "./validate-manifest";
 
 const SUPPORTED_SCHEMA_VERSIONS = [1];
 
-export function resolveManifest(): Manifest {
+function getLocalManifestPath() {
   let packageJsonPath: string;
 
   try {
@@ -21,7 +21,14 @@ export function resolveManifest(): Manifest {
     throw new Error(ERR_INSTALL_GUIDEPUP_PACKAGE_NOT_FOUND, { cause });
   }
 
-  const manifestPath = join(dirname(packageJsonPath), "manifest.json");
+  return join(dirname(packageJsonPath), "manifest.json");
+}
+
+export function resolveManifest(targetManifestPath?: string): {
+  manifestPath: string;
+  manifest: Manifest;
+} {
+  const manifestPath = targetManifestPath ?? getLocalManifestPath();
 
   if (!existsSync(manifestPath)) {
     throw new Error(ERR_INSTALL_GUIDEPUP_MANIFEST_INVALID);
@@ -46,5 +53,5 @@ export function resolveManifest(): Manifest {
     throw new Error(ERR_INSTALL_GUIDEPUP_MANIFEST_INVALID);
   }
 
-  return manifest;
+  return { manifestPath, manifest };
 }

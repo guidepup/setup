@@ -44,7 +44,7 @@ async function downloadScreenReader(
   const downloadDestination = join(
     cachePath,
     screenReader.id,
-    asset.platformVersion ?? "",
+    asset.platformVersion ?? "*",
     asset.version,
     asset.asset,
   );
@@ -90,7 +90,7 @@ async function downloadScreenReader(
     const unzipDestination = join(
       cachePath,
       screenReader.id,
-      asset.platformVersion ?? "",
+      asset.platformVersion ?? "*",
       asset.version,
       "extracted",
     );

@@ -30,6 +30,8 @@ export const ERR_INSTALL_SCREEN_READER_ASSET_UNAVAILABLE =
   "The requested screen reader asset is not available for this platform";
 export const ERR_INSTALL_UNABLE_TO_RESOLVE_OR_CREATE_GUIDEPUP_CACHE_PATH =
   "Unable to resolve or create the Guidepup cache path";
+export const ERR_INSTALL_FAILED_TO_REGISTER_INSTALLATION =
+  "Failed to register the Guidepup cache installation";
 export const ERR_INSTALL_FAILED_TO_DOWNLOAD_ASSET =
   "Failed to download Guidepup cache asset";
 export const ERR_INSTALL_FAILED_TO_VERIFY_CHECKSUM =

@@ -9,12 +9,17 @@ import { resolveManifest } from "./resolve-manifest";
 import type { ScreenReader } from "./types";
 import { resolveCachePath } from "./resolve-cache-path";
 import { downloadAssets } from "./download-assets";
+import { registerInstallation } from "./register-installation";
+import { pruneCache } from "./prune-cache";
 
 async function install(requestedScreenReaderIds?: string[]): Promise<void> {
   let targets: ScreenReader[];
 
   try {
-    const manifest = resolveManifest();
+    const { manifestPath, manifest } = resolveManifest();
+
+    const cachePath = resolveCachePath();
+    await registerInstallation(cachePath, manifestPath);
 
     targets = selectTargets(manifest, requestedScreenReaderIds);
 
@@ -22,8 +27,9 @@ async function install(requestedScreenReaderIds?: string[]): Promise<void> {
       handleNoInstallation();
     }
 
-    const cachePath = resolveCachePath();
     await downloadAssets(cachePath, targets);
+
+    await pruneCache(cachePath);
   } catch (error) {
     handleInstallError(error);
   }
