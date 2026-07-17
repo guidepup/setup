@@ -58,7 +58,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-14, macos-15, macos-15-intel, macos-26, macos-26-intel]
+        os:
+          [
+            macos-14,
+            macos-15,
+            macos-15-intel,
+            macos-26,
+            macos-26-intel,
+            windows-2022,
+            windows-2025,
+            windows-11-arm,
+            linux-latest,
+          ]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -78,6 +89,20 @@ jobs:
           {
             "version": 1,
             "screenReaders": [
+              {
+                "id": "nvda",
+                "name": "NVDA",
+                "platforms": ["win32"],
+                "defaultDownload": true,
+                "assets": [
+                  {
+                    "version": "0.2.1-2026.1.1",
+                    "repository": "guidepup/nvda",
+                    "asset": "guidepup-nvda-0.2.1-2026.1.1.zip ",
+                    "sha256": "b6fdfde86190c7c14132d459f2f88995da6251ded431e23947d676ffb152f963"
+                  }
+                ]
+              },
               {
                 "id": "voiceover",
                 "name": "VoiceOver",
