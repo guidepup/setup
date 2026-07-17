@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  test-setup:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -35,7 +35,7 @@ jobs:
           name: artifacts-test-${{ matrix.os }}
           path: |
             **/recordings/**/*
-  test-ignore-tcc-db:
+  test-setup-ignore-tcc-db:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -54,7 +54,7 @@ jobs:
           path: |
             **/recordings/**/*
 
-  install:
+  test-install:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
