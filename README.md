@@ -17,13 +17,13 @@ The `@guidepup/setup` CLI enables automation for <a href="https://www.guidepup.d
 ## Quick start
 
 ```sh
-# Install Guidepup
-npm install @guidepup/guidepup
-
-# Run setup once per machine
+# Setup machine once for screen reader automation
 npx @guidepup/setup setup
 
-# Run install per project and after upgrades
+# In project directory install Guidepup
+npm install @guidepup/guidepup
+
+# In project directory install required screen reader assets
 npx @guidepup/setup install
 ```
 
