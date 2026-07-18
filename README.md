@@ -1,4 +1,4 @@
-# Guidepup Setup
+# `@guidepup/setup`
 
 <a href="https://www.npmjs.com/package/@guidepup/setup"><img alt="Guidepup Setup available on NPM" src="https://img.shields.io/npm/v/@guidepup/setup" /></a>
 <a href="https://github.com/guidepup/setup/actions/workflows/test.yml"><img alt="Guidepup Setup test workflows" src="https://github.com/guidepup/setup/workflows/Test/badge.svg" /></a>
@@ -12,75 +12,86 @@
 [![Windows Server 2022 Support](https://img.shields.io/badge/windows_server-2022-blue.svg?logo=windows)](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022)
 [![Windows Server 2025 Support](https://img.shields.io/badge/windows_server-2025-blue.svg?logo=windows)](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2025)
 
-This package sets up your environment for screen reader automation.
+The `@guidepup/setup` CLI enables automation for <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a> and <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>.
 
-It enables automation for <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a> and <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>.
+## Quick start
 
-## Getting Started
+```sh
+# Install Guidepup
+npm install @guidepup/guidepup
 
-Run this command:
+# Run setup once per machine
+npx @guidepup/setup setup
 
-```console
-npx @guidepup/setup
+# Run install per project and after upgrades
+npx @guidepup/setup install
 ```
 
-And get cracking with your screen reader automation code!
+## Environment setup
 
-## Usage
+The `setup` CLI command configures your operating system for screen reader automation and only needs to be run once per machine:
 
-### Setup
-
-This subcommand allows you to setup an OS environment ready for screen reader automation.
-
-```console
+```sh
 npx @guidepup/setup setup
 ```
 
-#### CI
+### CI
 
-If you are running this command in CI/CD, it is recommended to add the `--ci` flag to prevent prompts for manual interaction:
+If you are running the `setup` CLI command in CI/CD, it is recommended to add the `--ci` flag to prevent prompts for manual interaction:
 
-```console
+```sh
 npx @guidepup/setup setup --ci
 ```
 
-#### macOS
+### macOS
 
 If you are running this command locally you may need to take some manual steps to complete setup by following the [manual VoiceOver setup documentation](https://www.guidepup.dev/docs/guides/manual-voiceover-setup).
 
-##### Ignore TCC Database Updates
+#### Ignoring TCC database updates
 
-If updating the `TCC.db` is not possible (due to enabled SIP) or not required for your macOS setup, you can skip the database update step by using the `--macos-ignore-tcc-db` flag:
+If updating the `TCC.db` is not possible (due to enabled System Integrity Protection) or not required for your macOS setup, you can skip database updates by using the `--macos-ignore-tcc-db` flag:
 
-```console
+```sh
 npx @guidepup/setup setup --macos-ignore-tcc-db
 ```
 
 > [!NOTE]
 > If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation.
 
-##### Recording
+> [!WARNING]
+> For system TCC.db updates you must first disable [System Integrity Protection (SIP)](https://support.apple.com/en-gb/102149). This comes with **serious security implications**, so please first refer to the [Apple documentation](https://developer.apple.com/documentation/security/disabling-and-enabling-system-integrity-protection) for more details before taking any action. Consider whether you are able to use alternative manual setup steps for configuration before exploring this option further.
+>
+> SIP only needs to be disabled while the required changes are being made. Re-enable SIP once the `setup` CLI command has completed.
+
+#### Recording
 
 If you are encountering errors in CI for macOS you can pass a `--macos-record` flag to the command which will output a screen-recording of the setup to a `./recordings/` directory:
 
-```console
-npx @guidepup/setup --ci --macos-record
+```sh
+npx @guidepup/setup setup --ci --macos-record
 ```
 
-### Install
+## Installing screen reader assets
 
-This subcommand allows you to install screen readers and their assets to use in screen reader automation with [Guidepup](https://www.guidepup.dev/).
+Each version of Guidepup requires specific screen reader assets to execute correctly.
 
-```console
+Install the default supported screen reader assets with one command from your project directory:
+
+```sh
 npx @guidepup/setup install
 ```
 
-By default VoiceOver is installed on macOS, and NVDA is installed on Windows.
+The `install` CLI command uses your project's installed `@guidepup/guidepup` version to determine which screen reader assets to install.
 
-To install a specific screen reader you can pass it to the command as an argument:
+New Guidepup releases may update the required screen reader assets. If you update Guidepup, rerun the `install` CLI command to install the latest supported screen reader assets.
 
-```console
+You can install a specific screen reader by providing additional arguments to the `install` CLI command:
+
+```sh
+# Install VoiceOver
 npx @guidepup/setup install voiceover
+
+# Install NVDA
 npx @guidepup/setup install nvda
 ```
 
@@ -89,33 +100,48 @@ Screen reader options include:
 - `voiceover` on macOS (default)
 - `nvda` on Windows (default)
 
-#### Using HTTP / HTTPS Proxy for Installation
+### Managing screen reader assets
 
-If you are using a proxy connection, you must define the proxy URL in an env variable. You can use any of the following variables:
+By default Guidepup downloads screen reader assets into the operating system's standard cache directory:
 
-- `HTTPS_PROXY`
-- `https_proxy`
-- `HTTP_PROXY`
-- `http_proxy`
-- `NO_PROXY`
-- `no_proxy`
+- `~/.cache/guidepup/` on Linux
+- `~/Library/Caches/guidepup/` on macOS
+- `%USERPROFILE%\AppData\Local\guidepup\` on Windows
 
-### Global Install
+You can override the default cache directory using an environment variable:
 
-You can also install the CLI globally:
+```sh
+GUIDEPUP_SCREEN_READERS_PATH=$HOME/guidepup npx @guidepup/setup install
+```
 
-```console
+### Unused screen reader cleanup
+
+Guidepup tracks which projects use each installed screen reader asset. When an asset is no longer referenced by any project, it is automatically removed the next time the `install` CLI command runs.
+
+### Installing behind a proxy
+
+Guidepup screen readers are installed directly from GitHub release URLs. If you are using a proxy you can use an environment variable to define the proxy URL:
+
+```sh
+HTTPS_PROXY=https://192.0.2.1 npx @guidepup/setup install
+```
+
+## Global install
+
+You can install the CLI globally:
+
+```sh
 npm install -g @guidepup/setup
 ```
 
-After which you can access the CLI through the `guidepup` command:
+After which you can access the CLI directly through the `guidepup` command:
 
-```console
+```sh
 guidepup setup
 guidepup install
 ```
 
-## Powerful Tooling
+## Powerful tooling
 
 Check out some of the other Guidepup modules:
 
