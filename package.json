@@ -1,7 +1,7 @@
 {
   "name": "@guidepup/setup",
   "version": "0.24.0",
-  "description": "Configure your environment and manage screen readers for Guidepup.",
+  "description": "CLI for configuring environments and install screen reader assets for Guidepup.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "bin": {
