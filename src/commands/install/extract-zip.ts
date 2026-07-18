@@ -1,5 +1,6 @@
+import { createReadStream } from "node:fs";
 import { readdir } from "node:fs/promises";
-import extract from "extract-zip";
+import unzipper from "unzipper";
 import {
   ERR_INSTALL_EMPTY_EXTRACTED_ASSET,
   ERR_INSTALL_FAILED_TO_EXTRACT_ASSET,
@@ -8,7 +9,7 @@ import { handleInfoWithPath } from "../../logging";
 import type { Asset } from "./types";
 import { deleteAsset } from "./delete-asset";
 
-async function deleteAssets(...assets) {
+async function deleteAssets(...assets: string[]) {
   for (const asset of assets) {
     await deleteAsset(asset);
   }
@@ -22,7 +23,9 @@ export async function extractZip(
   let files: string[];
 
   try {
-    await extract(source, { dir: destination });
+    await createReadStream(source)
+      .pipe(unzipper.Extract({ path: destination }))
+      .promise();
 
     files = await readdir(destination);
   } catch (cause) {
