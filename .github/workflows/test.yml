@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  test-setup:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -23,7 +23,7 @@ jobs:
             windows-11-arm,
           ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -35,13 +35,13 @@ jobs:
           name: artifacts-test-${{ matrix.os }}
           path: |
             **/recordings/**/*
-  test-ignore-tcc-db:
+  test-setup-ignore-tcc-db:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -53,22 +53,88 @@ jobs:
           name: artifacts-test-ignore-tcc-db-${{ matrix.os }}
           path: |
             **/recordings/**/*
-  test-nvda-install-dir:
+
+  test-install:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022, windows-2025, windows-11-arm]
+        os:
+          [
+            macos-14,
+            macos-15,
+            macos-15-intel,
+            macos-26,
+            macos-26-intel,
+            windows-2022,
+            windows-2025,
+            windows-11-arm,
+            ubuntu-latest,
+          ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
       - run: yarn install --frozen-lockfile
-      - run: yarn ci:nvda-install-dir
-      - run: Get-ChildItem $env:USERPROFILE\nvda
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: artifacts-test-nvda-install-dir-${{ matrix.os }}
-          path: |
-            **/recordings/**/*
+      - run: yarn build
+      - shell: bash
+        run: |
+          tmpdir=$(mktemp -d)
+          cd "$tmpdir"
+          npm init -y
+          npm install @guidepup/guidepup
+          npm install -g "${GITHUB_WORKSPACE}"
+          export PATH="$(npm bin -g):$PATH"
+
+          cat > node_modules/@guidepup/guidepup/manifest.json <<'EOF'
+          {
+            "version": 1,
+            "screenReaders": [
+              {
+                "id": "nvda",
+                "name": "NVDA",
+                "platforms": ["win32"],
+                "defaultDownload": true,
+                "assets": [
+                  {
+                    "version": "0.2.1-2026.1.1",
+                    "repository": "guidepup/nvda",
+                    "asset": "guidepup-nvda-0.2.1-2026.1.1.zip",
+                    "sha256": "b6fdfde86190c7c14132d459f2f88995da6251ded431e23947d676ffb152f963"
+                  }
+                ]
+              },
+              {
+                "id": "voiceover",
+                "name": "VoiceOver",
+                "platforms": ["darwin"],
+                "defaultDownload": true,
+                "assets": [
+                  {
+                    "version": "0.0.1",
+                    "platformVersion": "23",
+                    "repository": "guidepup/voiceover",
+                    "asset": "guidepup-voiceover-preferences-macos-14.dmg",
+                    "sha256": "c6595f5ca50440e8553cde278936a46eff58d4c904e19c87e7d0e25950617ee1"
+                  },
+                  {
+                    "version": "0.0.1",
+                    "platformVersion": "24",
+                    "repository": "guidepup/voiceover",
+                    "asset": "guidepup-voiceover-preferences-macos-15.dmg",
+                    "sha256": "8bdc3a11c45a19cc876a859bfbd64529469a8b7d4ad41fd7e00a0729ebdbcb25"
+                  },
+                  {
+                    "version": "0.0.1",
+                    "platformVersion": "25",
+                    "repository": "guidepup/voiceover",
+                    "asset": "guidepup-voiceover-preferences-macos-26.dmg",
+                    "sha256": "9af2a3af7c9bffae1b2af26f1970548ecd62f33965fd30f4e43f21b9f57ce5ca"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
+          guidepup install

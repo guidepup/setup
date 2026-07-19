@@ -4,12 +4,51 @@ export const logInfo = console.info.bind(console);
 export const logWarn = console.warn.bind(console);
 export const logError = console.error.bind(console);
 
-export function handleComplete(): never {
+export function handleNoInstallation(): never {
+  handleWarning(
+    "No installable screen readers were found for this environment",
+    "Consider contributing to Guidepup?",
+  );
+  logInfo(
+    chalk.dim(
+      "Please raise new issues at: " +
+        chalk.underline("https://github.com/guidepup/setup/issues"),
+    ),
+  );
+  logInfo("");
+
+  process.exit(0);
+}
+
+export function handleInstallComplete(): never {
+  logInfo("");
+  logInfo(chalk.green("Installation complete 🎉"));
+  logInfo("");
+
+  process.exit(0);
+}
+
+export function handleSetupComplete(): never {
   logInfo("");
   logInfo(chalk.green("Environment setup complete 🎉"));
   logInfo("");
 
   process.exit(0);
+}
+
+export function handleSetupManualRequired(): void {
+  logInfo(
+    "Please complete remaining setup by following this guide:\n\n--> " +
+      chalk.underline(
+        chalk.bold(
+          "https://www.guidepup.dev/docs/guides/manual-voiceover-setup",
+        ),
+      ),
+  );
+}
+
+export function handleInfoWithPath(message, urlOrPath) {
+  logInfo(`${message} ${chalk.dim(urlOrPath)}`);
 }
 
 export function handleWarning(title: string, subtitle: string): void {
@@ -20,7 +59,31 @@ export function handleWarning(title: string, subtitle: string): void {
   logError("");
 }
 
-export function handleError(err: Error): never {
+export function handleInstallError(err: Error): never {
+  const message = `${err.name}: ${err.message}`;
+
+  logError("");
+  logError(chalk.bold(chalk.red(`[!] ${chalk.bold(message)}`)));
+  logError("");
+  logError("Unable to complete screen reader installation");
+  logError("");
+  logError(
+    chalk.dim(
+      "Please raise new issues at: " +
+        chalk.underline("https://github.com/guidepup/setup/issues"),
+    ),
+  );
+  logError("");
+
+  if (err.cause && Error.isError(err.cause)) {
+    logError(chalk.dim(`Cause: ${err.cause.name}: ${err.cause.message}`));
+    logError("");
+  }
+
+  process.exit(1);
+}
+
+export function handleSetupError(err: Error): never {
   let message = err.message;
 
   if (err.name) {
@@ -35,8 +98,8 @@ export function handleError(err: Error): never {
   logError(
     chalk.dim(
       "Please raise new issues at: " +
-        chalk.underline("https://github.com/guidepup/setup/issues")
-    )
+        chalk.underline("https://github.com/guidepup/setup/issues"),
+    ),
   );
   logError("");
 
