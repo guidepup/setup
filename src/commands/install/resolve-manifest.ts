@@ -18,7 +18,21 @@ function getLocalManifestPath() {
       paths: [process.cwd()],
     });
   } catch (cause) {
-    throw new Error(ERR_INSTALL_GUIDEPUP_PACKAGE_NOT_FOUND, { cause });
+    packageJsonPath = join(process.cwd(), "package.json");
+
+    let localGuidepupPackageJson: { name: string } | undefined;
+
+    try {
+      localGuidepupPackageJson = JSON.parse(
+        readFileSync(packageJsonPath, "utf8"),
+      );
+    } catch {
+      // swallow
+    }
+
+    if (localGuidepupPackageJson?.name !== "@guidepup/guidepup") {
+      throw new Error(ERR_INSTALL_GUIDEPUP_PACKAGE_NOT_FOUND, { cause });
+    }
   }
 
   return join(dirname(packageJsonPath), "manifest.json");
