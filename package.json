@@ -1,11 +1,11 @@
 {
   "name": "@guidepup/setup",
-  "version": "0.23.0",
-  "description": "Setup your environment for screen-reader automation.",
+  "version": "0.24.0",
+  "description": "CLI for configuring environments and install screen reader assets for Guidepup.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "bin": {
-    "setup": "bin/setup"
+    "guidepup": "bin/guidepup"
   },
   "author": "Craig Morten <craig.morten@hotmail.co.uk>",
   "license": "MIT",
@@ -26,16 +26,15 @@
   ],
   "scripts": {
     "build": "yarn clean && yarn compile",
-    "ci": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record",
-    "ci:nvda-install-dir": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record --nvda-install-dir %userprofile%\\nvda",
-    "ci:ignore-tcc-db": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start --ci --record --ignore-tcc-db",
+    "ci": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start:setup --ci --macos-record",
+    "ci:ignore-tcc-db": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start:setup --ci --macos-record --macos-ignore-tcc-db",
     "clean": "rimraf lib",
     "compile": "tsc",
     "dev": "ts-node ./src/index.ts",
     "resolutionFix": "ts-node ./.github/workflows/resolutionFix.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "yarn lint --fix",
-    "start": "node ./bin/setup",
+    "start:setup": "node ./bin/guidepup setup",
     "prepublish": "yarn build"
   },
   "devDependencies": {
@@ -53,10 +52,9 @@
   },
   "dependencies": {
     "chalk": "^4.0.0",
-    "decompress": "^4.2.1",
-    "https-proxy-agent": "^7.0.5",
-    "regedit": "5.0.1",
-    "semver": "^7.5.4"
-  },
-  "guidepupNvdaVersion": "0.2.0-2026.1.1"
+    "commander": "^15.0.0",
+    "semver": "^7.5.4",
+    "undici": "^8.7.0",
+    "unzipper": "^0.12.5"
+  }
 }
