@@ -57,9 +57,11 @@ tell application "VoiceOver"
 end tell`;
 
 async function stopVoiceOver(): Promise<void> {
-  await retryOnError(() => runAppleScript(stopVoiceOverApplescript));
-
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  try {
+    await runAppleScript(stopVoiceOverApplescript);
+  } catch {
+    // Swallow
+  }
 
   try {
     execFileSync(
@@ -74,16 +76,9 @@ async function stopVoiceOver(): Promise<void> {
     // Swallow
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
-
-  await retryOnError(
-    () => {
-      if (isRunning()) {
-        throw new Error(ERR_SETUP_MACOS_UNABLE_TO_STOP_VOICEOVER);
-      }
-    },
-    { retries: 10, delay: 100 },
-  );
+  if (isRunning()) {
+    throw new Error(ERR_SETUP_MACOS_UNABLE_TO_STOP_VOICEOVER);
+  }
 }
 
 function preferencesExist(localPlist: string): void {
@@ -120,5 +115,5 @@ export async function ensureLocalPreferencesExist(): Promise<void> {
     delay: 100,
   });
 
-  await stopVoiceOver();
+  await retryOnError(() => stopVoiceOver(), { retries: 10, delay: 200 });
 }
