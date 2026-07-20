@@ -17,7 +17,7 @@ The `@guidepup/setup` CLI enables automation for <a href="https://www.guidepup.d
 ## Quick start
 
 ```sh
-# Setup machine once for screen reader automation
+# Set up machine once for screen reader automation
 npx @guidepup/setup setup
 
 # In project directory install Guidepup
