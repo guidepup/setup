@@ -5,7 +5,7 @@ export const DEFAULT_MAX_BUFFER = 1000 * 1000 * 100;
 
 export async function runAppleScript<T = string | void>(
   script: string,
-  { timeout = DEFAULT_TIMEOUT } = { timeout: DEFAULT_TIMEOUT }
+  { timeout = DEFAULT_TIMEOUT } = { timeout: DEFAULT_TIMEOUT },
 ): Promise<T> {
   const scriptWithTimeout = `
 with timeout of ${timeout} seconds
@@ -37,6 +37,7 @@ end doWithTimeout
       [],
       {
         maxBuffer: DEFAULT_MAX_BUFFER,
+        timeout: timeout + 2000,
       },
       (error, stdout) => {
         if (error) {
@@ -48,7 +49,7 @@ end doWithTimeout
         } else {
           return resolve(stdout.trim());
         }
-      }
+      },
     );
 
     child.stdin.write(scriptWithTimeout);

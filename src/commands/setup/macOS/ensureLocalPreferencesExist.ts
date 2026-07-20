@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -29,48 +29,24 @@ function getPreferencesDirectory(): string {
 }
 
 function startVoiceOver(): void {
+  spawn(
+    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter",
+    [],
+    { detached: true, stdio: "ignore" },
+  ).unref();
+}
+
+function isRunning(): boolean {
   try {
-    execSync(
-      "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter &",
-      { stdio: "ignore" },
+    return (
+      execFileSync("pgrep", ["-f", "VoiceOver"], {
+        encoding: "utf8",
+        timeout: 2000,
+      }).length > 0
     );
-  } catch (cause) {
-    throw new Error(ERR_SETUP_MACOS_UNABLE_TO_START_VOICEOVER, { cause });
-  }
-}
-
-function isRunning(): void {
-  try {
-    const stdout = execSync('ps aux | egrep "[V]oiceOver"', {
-      encoding: "utf-8",
-    });
-
-    if (stdout !== "") {
-      return;
-    }
   } catch {
-    // Swallow
+    return false;
   }
-
-  throw new Error(ERR_SETUP_MACOS_UNABLE_TO_START_VOICEOVER);
-}
-
-function isNotRunning(): Promise<boolean> {
-  try {
-    const stdout = execSync('ps aux | egrep "[V]oiceOver"', {
-      encoding: "utf-8",
-    });
-
-    if (stdout === "") {
-      return;
-    }
-  } catch (cause) {
-    if (cause?.stderr === "") {
-      return;
-    }
-  }
-
-  throw new Error(ERR_SETUP_MACOS_UNABLE_TO_STOP_VOICEOVER);
 }
 
 const stopVoiceOverApplescript = `
@@ -86,8 +62,13 @@ async function stopVoiceOver(): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   try {
-    execSync(
-      `kill -15 $(ps aux | egrep "[V]oiceOver.app/Contents/MacOS/VoiceOver launchd -s" | awk '{print $2}')`,
+    execFileSync(
+      "pkill",
+      ["-15", "-f", "VoiceOver.app/Contents/MacOS/VoiceOver launchd -s"],
+      {
+        stdio: "ignore",
+        timeout: 2000,
+      },
     );
   } catch {
     // Swallow
@@ -95,7 +76,14 @@ async function stopVoiceOver(): Promise<void> {
 
   await new Promise((resolve) => setTimeout(resolve, 100));
 
-  await retryOnError(() => isNotRunning(), { retries: 10, delay: 100 });
+  await retryOnError(
+    () => {
+      if (isRunning()) {
+        throw new Error(ERR_SETUP_MACOS_UNABLE_TO_STOP_VOICEOVER);
+      }
+    },
+    { retries: 10, delay: 100 },
+  );
 }
 
 function preferencesExist(localPlist: string): void {
@@ -118,10 +106,17 @@ export async function ensureLocalPreferencesExist(): Promise<void> {
 
   startVoiceOver();
 
-  await retryOnError(() => isRunning(), { retries: 10, delay: 100 });
+  await retryOnError(
+    () => {
+      if (!isRunning()) {
+        throw new Error(ERR_SETUP_MACOS_UNABLE_TO_START_VOICEOVER);
+      }
+    },
+    { retries: 10, delay: 100 },
+  );
 
   await retryOnError(() => preferencesExist(localPlist), {
-    retries: 10,
+    retries: 20,
     delay: 100,
   });
 
