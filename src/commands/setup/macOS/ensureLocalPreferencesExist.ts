@@ -1,4 +1,4 @@
-import { execFileSync, spawn } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -28,18 +28,19 @@ function getPreferencesDirectory(): string {
   return join(homedir(), "Library", "Preferences");
 }
 
-function startVoiceOver(): void {
-  spawn(
-    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter",
-    [],
-    { detached: true, stdio: "ignore" },
-  ).unref();
+async function startVoiceOver(): Promise<void> {
+  execSync(
+    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter &",
+    { stdio: "ignore", timeout: 2000 },
+  );
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 }
 
 function isRunning(): boolean {
   try {
     return (
-      execFileSync("pgrep", ["-f", "VoiceOver"], {
+      execFileSync("pgrep", ["-f", "VoiceOver launchd -s"], {
         encoding: "utf8",
         timeout: 2000,
       }).length > 0
@@ -50,10 +51,8 @@ function isRunning(): boolean {
 }
 
 const stopVoiceOverApplescript = `
-tell application "VoiceOver"
-  with transaction
-    quit
-  end transaction
+tell application "System Events"
+  key code 96 using {command down}
 end tell`;
 
 async function stopVoiceOver(): Promise<void> {
@@ -62,6 +61,8 @@ async function stopVoiceOver(): Promise<void> {
   } catch {
     // Swallow
   }
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   try {
     execFileSync(
@@ -75,6 +76,8 @@ async function stopVoiceOver(): Promise<void> {
   } catch {
     // Swallow
   }
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   if (isRunning()) {
     throw new Error(ERR_SETUP_MACOS_UNABLE_TO_STOP_VOICEOVER);
@@ -99,7 +102,7 @@ export async function ensureLocalPreferencesExist(): Promise<void> {
     return;
   }
 
-  startVoiceOver();
+  await startVoiceOver();
 
   await retryOnError(
     () => {
@@ -115,5 +118,5 @@ export async function ensureLocalPreferencesExist(): Promise<void> {
     delay: 100,
   });
 
-  await retryOnError(() => stopVoiceOver(), { retries: 10, delay: 200 });
+  await retryOnError(() => stopVoiceOver(), { retries: 10, delay: 100 });
 }

@@ -37,7 +37,6 @@ end doWithTimeout
       [],
       {
         maxBuffer: DEFAULT_MAX_BUFFER,
-        timeout: timeout + 2000,
       },
       (error, stdout) => {
         if (error) {

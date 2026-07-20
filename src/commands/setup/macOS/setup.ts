@@ -70,7 +70,9 @@ export async function setup({
     enableAppleScriptControlSystemDefaults();
     disableSplashScreenSystemDefaults();
     disableDictationInputAutoEnable();
+
     await ensureLocalPreferencesExist();
+    enableAppleScriptControlSystemDefaults();
 
     if (ci) {
       await enableDoNotDisturb();
