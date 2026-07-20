@@ -103,5 +103,10 @@ export function handleSetupError(err: Error): never {
   );
   logError("");
 
+  if (err.cause && Error.isError(err.cause)) {
+    logError(chalk.dim(`Cause: ${err.cause.name}: ${err.cause.message}`));
+    logError("");
+  }
+
   process.exit(1);
 }

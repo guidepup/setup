@@ -1,4 +1,4 @@
-import { platform, release } from "node:os";
+import { platform } from "node:os";
 import { dirname, join } from "node:path";
 import { mkdirSync } from "node:fs";
 import type { Asset, ScreenReader } from "./types";
@@ -12,10 +12,7 @@ import {
 } from "../../errors";
 import { handleInfoWithPath } from "../../logging";
 import { getPlatformVersion } from "./get-platform-version";
-
-function platformMajorVersion(): string {
-  return release().split(".", 1)[0];
-}
+import { platformMajorVersion } from "../../platform-major-version";
 
 function selectAsset(screenReader: ScreenReader): Asset {
   const currentPlatform = platform();
@@ -24,7 +21,7 @@ function selectAsset(screenReader: ScreenReader): Asset {
   const asset = screenReader.assets.find(
     (asset) =>
       !asset.platformVersion ||
-      asset.platformVersion === currentPlatformVersion,
+      asset.platformVersion === `${currentPlatformVersion}`,
   );
 
   if (!asset) {

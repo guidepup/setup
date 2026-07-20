@@ -17,6 +17,12 @@ export const ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION =
   "Unable to setup environment without manual user interaction\n\nEnsure that SIP is disabled or preconfigure your environment with 'Allow VoiceOver to be controlled with AppleScript' enabled";
 export const ERR_SETUP_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB =
   'Failed to enable "Do not disturb" mode';
+export const ERR_SETUP_MACOS_UNABLE_TO_START_VOICEOVER =
+  "Unable to start VoiceOver";
+export const ERR_SETUP_MACOS_UNABLE_TO_STOP_VOICEOVER =
+  "Unable to stop VoiceOver";
+export const ERR_SETUP_MACOS_UNABLE_TO_FIND_VOICEOVER_PREFERENCES =
+  "Unable to find VoiceOver preferences";
 
 export const ERR_INSTALL_GUIDEPUP_PACKAGE_NOT_FOUND =
   "No local installation of '@guidepup/guidepup' was found\n\nPlease install '@guidepup/guidepup' first before running the CLI install";

@@ -11,6 +11,7 @@ import { handleSetupManualRequired, handleWarning } from "../../../logging";
 import { ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../../../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
+import { ensureLocalPreferencesExist } from "./ensureLocalPreferencesExist";
 
 interface MacOSSetupOptions {
   ci?: boolean;
@@ -69,6 +70,7 @@ export async function setup({
     enableAppleScriptControlSystemDefaults();
     disableSplashScreenSystemDefaults();
     disableDictationInputAutoEnable();
+    await ensureLocalPreferencesExist();
 
     if (ci) {
       await enableDoNotDisturb();
