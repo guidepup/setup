@@ -2,7 +2,7 @@ import { release } from "os";
 import { execSync } from "child_process";
 import { ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../../../errors";
 
-const epoch = +Date.now();
+const epoch = Math.floor(Date.now() / 1000);
 
 const sshdPath = "/usr/sbin/sshd";
 const bashPath = "/bin/bash";
@@ -194,7 +194,7 @@ export function updateTccDb(path: string): void {
     });`;
 
     try {
-      execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`, {
+      execSync(`sqlite3 "${path}" "${query}"`, {
         encoding: "utf8",
       });
     } catch (cause) {
