@@ -7,7 +7,11 @@ import { isSipEnabled } from "./isSipEnabled";
 import { writeDatabaseFile } from "./writeDatabaseFile";
 import { SYSTEM_PATH, USER_PATH, updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
-import { handleSetupManualRequired, handleWarning } from "../../../logging";
+import {
+  handleNote,
+  handleSetupManualRequired,
+  handleWarning,
+} from "../../../logging";
 import { ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../../../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
@@ -30,6 +34,11 @@ export async function setup({
     } catch (e) {
       if (ci) {
         throw e;
+      } else {
+        handleNote(
+          "Unable to configure automation permissions",
+          "This can be expected when running the Guidepup setup locally if macOS does not grant the required permissions automatically.\nPlease accept any system dialogs requesting automation permissions while using Guidepup.\nIf you are running Guidepup in CI, use the `--ci` option to skip interactive permission setup.\nAlternatively, please refer to https://www.guidepup.dev/docs/guides/manual-voiceover-setup for instructions on manually configuring VoiceOver permissions.",
+        );
       }
     }
 
@@ -40,8 +49,8 @@ export async function setup({
     }
   } else {
     handleWarning(
-      "Ignoring TCC database updates",
-      "If the necessary permissions have not been granted by other means, using this flag may result in your environment not being set up for reliable screen reader automation.",
+      "Skipping automation permission setup",
+      "If the necessary permissions have not been granted by other means, this may result in an environment that is not reliably configured for screen reader automation.\n\nPlease refer to https://www.guidepup.dev/docs/guides/manual-voiceover-setup for instructions on manually configuring VoiceOver permissions.",
     );
   }
 
