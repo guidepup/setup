@@ -51,6 +51,14 @@ export function handleInfoWithPath(message, urlOrPath) {
   logInfo(`${message} ${chalk.dim(urlOrPath)}`);
 }
 
+export function handleNote(title: string, subtitle: string): void {
+  logWarn("");
+  logWarn(chalk.bold(chalk.blue(`[!] Note: ${chalk.bold(title)}`)));
+  logWarn("");
+  logWarn(subtitle);
+  logError("");
+}
+
 export function handleWarning(title: string, subtitle: string): void {
   logWarn("");
   logWarn(chalk.bold(chalk.yellow(`[!] Warning: ${chalk.bold(title)}`)));
