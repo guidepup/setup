@@ -12,7 +12,7 @@ export const ERR_SETUP_MACOS_UNABLE_TO_VERIFY_SIP =
 export const ERR_SETUP_MACOS_UNABLE_TO_WRITE_DATABASE_FILE =
   "Unable to write to the VoiceOver database file\n\nEnsure that SIP is disabled or pass '--macos-ignore-tcc-db' to ignore TCC database updates";
 export const ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB =
-  "Unable to write to the user TCC database\n\nEnsure that SIP is disabled or pass '--macos-ignore-tcc-db' to ignore TCC database updates";
+  "Unable to write to the user TCC database\n\nEnsure that SIP is disabled for the database, or pass '--macos-ignore-tcc-db' to ignore TCC database updates";
 export const ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION =
   "Unable to setup environment without manual user interaction\n\nEnsure that SIP is disabled or preconfigure your environment with 'Allow VoiceOver to be controlled with AppleScript' enabled";
 export const ERR_SETUP_MACOS_FAILED_TO_ENABLE_DO_NOT_DISTURB =

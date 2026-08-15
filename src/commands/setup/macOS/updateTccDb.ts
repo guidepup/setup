@@ -194,7 +194,7 @@ export function updateTccDb(path: string): void {
     });`;
 
     try {
-      execSync(`sqlite3 "${path}" "${query}"`, {
+      execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`, {
         encoding: "utf8",
       });
     } catch (cause) {
