@@ -196,6 +196,7 @@ export function updateTccDb(path: string): void {
     try {
       execFileSync("sqlite3", [path, query], {
         encoding: "utf8",
+        stdio: "ignore",
       });
     } catch (cause) {
       throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
