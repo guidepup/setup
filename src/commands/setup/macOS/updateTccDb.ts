@@ -1,4 +1,4 @@
-import { release } from "os";
+import { homedir, release } from "os";
 import { execSync, execFileSync } from "child_process";
 import { ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../../../errors";
 
@@ -181,8 +181,7 @@ const getEntries = (): string[] => {
   ];
 };
 
-export const USER_PATH =
-  "$HOME/Library/Application Support/com.apple.TCC/TCC.db";
+export const USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
 export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
 
 export function updateTccDb(path: string): void {
