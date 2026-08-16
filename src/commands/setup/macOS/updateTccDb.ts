@@ -1,5 +1,5 @@
-import { release } from "os";
-import { execSync } from "child_process";
+import { homedir, release } from "os";
+import { execSync, execFileSync } from "child_process";
 import { ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../../../errors";
 
 const epoch = Math.floor(Date.now() / 1000);
@@ -181,24 +181,27 @@ const getEntries = (): string[] => {
   ];
 };
 
-export const USER_PATH =
-  "$HOME/Library/Application Support/com.apple.TCC/TCC.db";
+export const USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
 export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
 
 export function updateTccDb(path: string): void {
+  const osRelease = release();
+  const isSonomaOrNewer = parseInt(osRelease.split(".")[0], 10) >= 23;
+
   for (const values of getEntries()) {
-    const osRelease = release();
-    const isSonomaOrNewer = parseInt(osRelease.split(".").at(0)) >= 23;
-    const query = `INSERT OR IGNORE INTO access VALUES(${values}${
+    const query = `.timeout 5000\nINSERT OR IGNORE INTO access VALUES(${values}${
       isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""
     });`;
 
     try {
-      execSync(`sqlite3 "${path}" "${query}" >/dev/null 2>&1`, {
+      execFileSync("sqlite3", [path, query], {
         encoding: "utf8",
+        stdio: "ignore",
       });
     } catch (cause) {
-      throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, { cause });
+      throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
+        cause,
+      });
     }
   }
 }
