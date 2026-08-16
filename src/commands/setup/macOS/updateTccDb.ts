@@ -190,12 +190,12 @@ export function updateTccDb(path: string): void {
   const isSonomaOrNewer = parseInt(osRelease.split(".")[0], 10) >= 23;
 
   for (const values of getEntries()) {
-    const query = `.timeout 5000\nINSERT OR IGNORE INTO access VALUES(${values}${
+    const query = `INSERT OR IGNORE INTO access VALUES(${values}${
       isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""
     });`;
 
     try {
-      execFileSync("sqlite3", [path, query], {
+      execFileSync("sqlite3", [path, ".timeout 5000", query], {
         encoding: "utf8",
         stdio: "ignore",
       });
