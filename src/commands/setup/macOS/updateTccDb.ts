@@ -184,7 +184,7 @@ const getEntries = (): string[] => {
 export const USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
 export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
 
-export function updateTccDb(path: string): void {
+export async function updateTccDb(path: string): Promise<void> {
   const osRelease = release();
   const isSonomaOrNewer = parseInt(osRelease.split(".")[0], 10) >= 23;
 
@@ -204,4 +204,7 @@ export function updateTccDb(path: string): void {
       });
     }
   }
+
+  // 1s sleep to give cache for updates to propagate
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 }
