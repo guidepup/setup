@@ -190,14 +190,13 @@ export function updateTccDb(path: string): void {
   const isSonomaOrNewer = parseInt(osRelease.split(".")[0], 10) >= 23;
 
   for (const values of getEntries()) {
-    const query = `INSERT OR IGNORE INTO access VALUES(${values}${
+    const query = `.timeout 5000\nINSERT OR IGNORE INTO access VALUES(${values}${
       isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""
     });`;
 
     try {
-      execFileSync("sqlite3", [path, ".timeout 5000", query], {
+      execFileSync("sqlite3", [path, query], {
         encoding: "utf8",
-        stdio: "ignore",
       });
     } catch (cause) {
       throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
