@@ -30,7 +30,7 @@ export async function setup({
 }: MacOSSetupOptions = {}): Promise<void> {
   if (!macosIgnoreTccDb) {
     try {
-      updateTccDb(USER_PATH);
+      await updateTccDb(USER_PATH);
     } catch (e) {
       if (ci) {
         throw e;
@@ -43,7 +43,7 @@ export async function setup({
     }
 
     try {
-      updateTccDb(SYSTEM_PATH);
+      await updateTccDb(SYSTEM_PATH);
     } catch {
       // Swallow error - most CI don't allow system configuration
     }

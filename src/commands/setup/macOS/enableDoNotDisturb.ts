@@ -104,15 +104,20 @@ export async function enableDoNotDisturb() {
       await promisify(exec)(enableFocusModeShellscript);
     } else if (platformMajor === 21) {
       // From macOS 12 Monterey (Darwin 21) there is no known way to enable DND via system defaults
-      await retryOnError(() => runAppleScript(enableFocusModeAppleScript));
+      await retryOnError(() => runAppleScript(enableFocusModeAppleScript), {
+        retries: 5,
+        delay: 500,
+      });
     } else {
       const { stdout: locale } = await promisify(exec)(getLocale);
 
       // From macOS 13 Ventura (Darwin 22) there is no known way to enable DND via system settings
-      await retryOnError(() =>
-        runAppleScript(
-          enableFocusModeVenturaAppleScript(locale, platformMajor),
-        ),
+      await retryOnError(
+        () =>
+          runAppleScript(
+            enableFocusModeVenturaAppleScript(locale, platformMajor),
+          ),
+        { retries: 5, delay: 500 },
       );
     }
   } catch (cause) {
