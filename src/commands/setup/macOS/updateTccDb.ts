@@ -181,6 +181,8 @@ const getEntries = (): string[] => {
   ];
 };
 
+const TIMEOUT_BACKOFFS = [1000, 1000, 3000, 5000, 8000];
+
 export const USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
 export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
 
@@ -189,19 +191,27 @@ export async function updateTccDb(path: string): Promise<void> {
   const isSonomaOrNewer = parseInt(osRelease.split(".")[0], 10) >= 23;
 
   for (const values of getEntries()) {
-    const query = `.timeout 5000\nINSERT OR IGNORE INTO access VALUES(${values}${
+    const query = `INSERT OR IGNORE INTO access VALUES(${values}${
       isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""
     });`;
 
-    try {
-      execFileSync("sqlite3", [path, query], {
-        encoding: "utf8",
-        stdio: "ignore",
-      });
-    } catch (cause) {
-      throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
-        cause,
-      });
+    for (let i = 0; i < TIMEOUT_BACKOFFS.length + 1; i++) {
+      try {
+        execFileSync("sqlite3", [path, query], {
+          encoding: "utf8",
+          stdio: "ignore",
+        });
+      } catch (cause) {
+        if (i === TIMEOUT_BACKOFFS.length) {
+          throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
+            cause,
+          });
+        }
+
+        await new Promise((resolve) =>
+          setTimeout(resolve, TIMEOUT_BACKOFFS[i]),
+        );
+      }
     }
   }
 
