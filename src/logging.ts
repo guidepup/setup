@@ -17,7 +17,7 @@ export function handleNoInstallation(): never {
   );
   logInfo("");
 
-  process.exit(0);
+  process.exit(1);
 }
 
 export function handleInstallComplete(): never {

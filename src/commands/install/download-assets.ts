@@ -13,6 +13,7 @@ import {
 import { handleInfoWithPath } from "../../logging";
 import { getPlatformVersion } from "./get-platform-version";
 import { platformMajorVersion } from "../../platform-major-version";
+import { extractTarGz } from "./extract-tar-gz";
 
 function selectAsset(screenReader: ScreenReader): Asset {
   const currentPlatform = platform();
@@ -100,6 +101,26 @@ async function downloadScreenReader(
     );
 
     await extractZip(asset, downloadDestination, unzipDestination);
+
+    handleInfoWithPath(
+      `${screenReader.name} (${versionMessage}) successfully extracted to`,
+      unzipDestination,
+    );
+  } else if (asset.asset.endsWith(".tar.gz")) {
+    const unzipDestination = join(
+      cachePath,
+      screenReader.id,
+      getPlatformVersion(asset),
+      asset.version,
+      "extracted",
+    );
+
+    handleInfoWithPath(
+      `Extracting ${screenReader.name} (${versionMessage}) from`,
+      downloadDestination,
+    );
+
+    await extractTarGz(asset, downloadDestination, unzipDestination);
 
     handleInfoWithPath(
       `${screenReader.name} (${versionMessage}) successfully extracted to`,

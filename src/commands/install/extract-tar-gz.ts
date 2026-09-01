@@ -1,6 +1,6 @@
-import { createReadStream } from "node:fs";
-import { readdir } from "node:fs/promises";
-import unzipper from "unzipper";
+import { execFile } from "node:child_process";
+import { mkdir, readdir } from "node:fs/promises";
+import { promisify } from "node:util";
 import {
   ERR_INSTALL_EMPTY_EXTRACTED_ASSET,
   ERR_INSTALL_FAILED_TO_EXTRACT_ASSET,
@@ -9,7 +9,9 @@ import { handleInfoWithPath } from "../../logging";
 import type { Asset } from "./types";
 import { deleteAsset } from "./delete-asset";
 
-export async function extractZip(
+const execFileAsync = promisify(execFile);
+
+export async function extractTarGz(
   asset: Asset,
   source: string,
   destination: string,
@@ -17,9 +19,9 @@ export async function extractZip(
   let files: string[];
 
   try {
-    await createReadStream(source)
-      .pipe(unzipper.Extract({ path: destination }))
-      .promise();
+    await mkdir(destination, { recursive: true });
+
+    await execFileAsync("tar", ["-xzf", source, "-C", destination]);
 
     files = await readdir(destination);
   } catch (cause) {
