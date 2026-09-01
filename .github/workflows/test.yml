@@ -132,11 +132,11 @@ jobs:
                 "defaultDownload": true,
                 "assets": [
                   {
-                    "version": "0.1.1-50.2",
-                    "platformVersion": "6",
+                    "version": "0.2.0-50.2",
+                    "platformVersion": "7",
                     "repository": "guidepup/orca",
-                    "asset": "guidepup-orca-0.1.1-50.2.tar.gz",
-                    "sha256": "36e87abb0fc7fca178128a95c245a81644aae73109e8dd2beb7c84b05b878494"
+                    "asset": "guidepup-orca-0.2.0-50.2.tar.gz",
+                    "sha256": "9ce2b7962e6e3e5245782e1c2d628feeb2637484d32139dffe841fd585e07b71"
                   }
                 ]
               },
@@ -188,3 +188,103 @@ jobs:
           EOF
 
           guidepup install
+
+  test-install-unsupported:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - shell: bash
+        run: |
+          tmpdir=$(mktemp -d)
+          cd "$tmpdir"
+          npm init -y
+          npm install @guidepup/guidepup
+          npm install -g "${GITHUB_WORKSPACE}"
+          export PATH="$(npm bin -g):$PATH"
+
+          cat > node_modules/@guidepup/guidepup/manifest.json <<'EOF'
+          {
+            "version": 1,
+            "screenReaders": [
+              {
+                "id": "orca",
+                "name": "Orca",
+                "platforms": ["linux"],
+                "defaultDownload": true,
+                "assets": [
+                  {
+                    "version": "0.2.0-50.2",
+                    "platformVersion": "7",
+                    "repository": "guidepup/orca",
+                    "asset": "guidepup-orca-0.2.0-50.2.tar.gz",
+                    "sha256": "9ce2b7962e6e3e5245782e1c2d628feeb2637484d32139dffe841fd585e07b71"
+                  }
+                ]
+              },
+              {
+                "id": "nvda",
+                "name": "NVDA",
+                "platforms": ["win32"],
+                "defaultDownload": true,
+                "assets": [
+                  {
+                    "version": "0.2.1-2026.1.1",
+                    "repository": "guidepup/nvda",
+                    "asset": "guidepup-nvda-0.2.1-2026.1.1.zip",
+                    "sha256": "b6fdfde86190c7c14132d459f2f88995da6251ded431e23947d676ffb152f963"
+                  }
+                ]
+              },
+              {
+                "id": "voiceover",
+                "name": "VoiceOver",
+                "platforms": ["darwin"],
+                "defaultDownload": true,
+                "assets": [
+                  {
+                    "version": "0.0.1",
+                    "platformVersion": "23",
+                    "repository": "guidepup/voiceover",
+                    "asset": "guidepup-voiceover-preferences-macos-14.dmg",
+                    "sha256": "c6595f5ca50440e8553cde278936a46eff58d4c904e19c87e7d0e25950617ee1"
+                  },
+                  {
+                    "version": "0.0.1",
+                    "platformVersion": "24",
+                    "repository": "guidepup/voiceover",
+                    "asset": "guidepup-voiceover-preferences-macos-15.dmg",
+                    "sha256": "8bdc3a11c45a19cc876a859bfbd64529469a8b7d4ad41fd7e00a0729ebdbcb25"
+                  },
+                  {
+                    "version": "0.0.1",
+                    "platformVersion": "25",
+                    "repository": "guidepup/voiceover",
+                    "asset": "guidepup-voiceover-preferences-macos-26.dmg",
+                    "sha256": "9af2a3af7c9bffae1b2af26f1970548ecd62f33965fd30f4e43f21b9f57ce5ca"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
+          set +e
+
+          guidepup install
+          exit_code=$?
+
+          if [ "$exit_code" -eq 0 ]; then
+            echo "Expected install to fail, but it succeeded."
+
+            exit 1
+          fi
+
+          echo "Install correctly failed with exit code $exit_code."
