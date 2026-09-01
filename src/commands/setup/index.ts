@@ -1,6 +1,7 @@
 import { platform } from "node:os";
 import { Command } from "commander";
 import { setup as setupMacOS } from "./macOS/setup";
+import { setup as setupLinux } from "./linux/setup";
 import { ERR_SETUP_UNSUPPORTED_OS } from "../../errors";
 import { handleSetupError, handleSetupComplete } from "../../logging";
 
@@ -20,6 +21,11 @@ async function setup(options: SetupCommandOptions): Promise<void> {
       }
       case "darwin": {
         await setupMacOS(options);
+
+        break;
+      }
+      case "linux": {
+        await setupLinux();
 
         break;
       }

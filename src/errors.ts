@@ -24,6 +24,15 @@ export const ERR_SETUP_MACOS_UNABLE_TO_STOP_VOICEOVER =
 export const ERR_SETUP_MACOS_UNABLE_TO_FIND_VOICEOVER_PREFERENCES =
   "Unable to find VoiceOver preferences";
 
+export const ERR_SETUP_LINUX_GET_DISTRIBUTION =
+  "Failed to determine the Linux distribution.";
+export const ERR_SETUP_LINUX_UNSUPPORTED_DISTRIBUTION =
+  "Unsupported Linux OS - consider contributing to Guidepup?";
+export const ERR_SETUP_LINUX_UPDATE_PACKAGES =
+  "Failed to update Linux package information.";
+export const ERR_SETUP_LINUX_INSTALL_PACKAGES =
+  "Failed to install Linux packages.";
+
 export const ERR_INSTALL_GUIDEPUP_PACKAGE_NOT_FOUND =
   "No local installation of '@guidepup/guidepup' was found\n\nPlease install '@guidepup/guidepup' first before running the CLI install";
 export const ERR_INSTALL_GUIDEPUP_MANIFEST_INVALID =
