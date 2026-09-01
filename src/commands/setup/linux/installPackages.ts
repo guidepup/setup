@@ -8,11 +8,12 @@ import {
 const execFileAsync = promisify(execFile);
 
 const LINUX_PACKAGES = [
-  "orca",
-  "xvfb",
   "dbus-x11",
   "libglib2.0-bin",
+  "orca",
   "pulseaudio",
+  "x11-utils",
+  "xvfb",
 ] as const;
 
 function getAptCommand(): {
