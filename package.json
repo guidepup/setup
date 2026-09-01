@@ -22,7 +22,8 @@
     "accessibility",
     "a11y",
     "voiceover",
-    "nvda"
+    "nvda",
+    "orca"
   ],
   "scripts": {
     "build": "yarn clean && yarn compile",
