@@ -14,7 +14,7 @@
 [![Ubuntu Resolute Support](https://img.shields.io/badge/ubuntu-26.04%2B-blue.svg?logo=ubuntu)](https://releases.ubuntu.com/resolute/)
 [![Debian Trixie Support](https://img.shields.io/badge/debian-13%2B-blue.svg?logo=debian)](https://www.debian.org/releases/trixie/)
 
-The `@guidepup/setup` CLI enables automation for <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a>, <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a> and <b>Orca on Linux</b>.
+The `@guidepup/setup` CLI enables automation for <b>Orca on Linux</b>, <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a>, and <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>.
 
 ## Quick start
 
@@ -95,10 +95,14 @@ npx @guidepup/setup install voiceover
 
 # Install NVDA
 npx @guidepup/setup install nvda
+
+# Install Orca
+npx @guidepup/setup install orca
 ```
 
 Screen reader options include:
 
+- `orca` on Linux (default)
 - `voiceover` on macOS (default)
 - `nvda` on Windows (default)
 
