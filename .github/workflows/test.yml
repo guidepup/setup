@@ -75,7 +75,7 @@ jobs:
         run: |
           set +e
 
-          yarn setup
+          yarn ci
           exit_code=$?
 
           if [ "$exit_code" -eq 0 ]; then
