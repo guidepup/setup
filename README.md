@@ -11,8 +11,10 @@
 [![macOS Tahoe Support](https://img.shields.io/badge/macos-Tahoe-blue.svg?logo=apple)](https://www.apple.com/uk/os/macos/)
 [![Windows Server 2022 Support](https://img.shields.io/badge/windows_server-2022-blue.svg?logo=windows)](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022)
 [![Windows Server 2025 Support](https://img.shields.io/badge/windows_server-2025-blue.svg?logo=windows)](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2025)
+[![Ubuntu Resolute Support](https://img.shields.io/badge/ubuntu-26.04%2B-blue.svg?logo=ubuntu)](https://releases.ubuntu.com/resolute/)
+[![Debian Trixie Support](https://img.shields.io/badge/debian-13%2B-blue.svg?logo=debian)](https://www.debian.org/releases/trixie/)
 
-The `@guidepup/setup` CLI enables automation for <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a> and <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>.
+The `@guidepup/setup` CLI enables automation for <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a>, <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a> and <b>Orca on Linux</b>.
 
 ## Quick start
 
