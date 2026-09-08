@@ -9,6 +9,7 @@ const execFileAsync = promisify(execFile);
 
 const LINUX_PACKAGES = [
   "dbus-x11",
+  "dconf-cli",
   "libglib2.0-bin",
   "orca",
   "pulseaudio",
