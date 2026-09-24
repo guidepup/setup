@@ -7,15 +7,12 @@ import { isSipEnabled } from "./isSipEnabled";
 import { writeDatabaseFile } from "./writeDatabaseFile";
 import { SYSTEM_PATH, USER_PATH, updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
-import {
-  handleNote,
-  handleSetupManualRequired,
-  handleWarning,
-} from "../../../logging";
+import { handleNote, handleWarning } from "../../../logging";
 import { ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../../../errors";
 import { enableDoNotDisturb } from "./enableDoNotDisturb";
 import { enabledDbFile } from "./isAppleScriptControlEnabled/enabledDbFile";
 import { ensureLocalPreferencesExist } from "./ensureLocalPreferencesExist";
+import { waitForAppleScriptControl } from "./waitForAppleScriptControl";
 
 interface MacOSSetupOptions {
   ci?: boolean;
@@ -37,7 +34,7 @@ export async function setup({
       } else {
         handleNote(
           "Unable to configure automation permissions",
-          "This can be expected when running the Guidepup setup locally if macOS does not grant the required permissions automatically.\nPlease accept any system dialogs requesting automation permissions while using Guidepup.\nIf you are running Guidepup in CI, use the `--ci` option to skip interactive permission setup.\nAlternatively, please refer to https://www.guidepup.dev/docs/guides/manual-voiceover-setup for instructions on manually configuring VoiceOver permissions.",
+          "This can be expected when running the Guidepup setup locally if macOS does not grant the required permissions automatically.\n\nPlease accept any system dialogs requesting automation permissions while using Guidepup.\n\nIf you are running Guidepup in CI, use the `--ci` option to skip interactive permission setup.\n\nAlternatively, please refer to https://www.guidepup.dev/docs/guides/manual-voiceover-setup for instructions on manually configuring VoiceOver permissions.",
         );
       }
     }
@@ -87,7 +84,11 @@ export async function setup({
       await enableDoNotDisturb();
     }
 
-    if (!isSipEnabled() && !(await enabledDbFile())) {
+    if (await enabledDbFile()) {
+      return;
+    }
+
+    if (!isSipEnabled()) {
       writeDatabaseFile();
 
       return;
@@ -101,7 +102,7 @@ export async function setup({
       throw new Error(ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION);
     }
 
-    handleSetupManualRequired();
+    await waitForAppleScriptControl();
   } finally {
     stopRecording();
   }
