@@ -23,6 +23,7 @@ const finderApp = "com.apple.finder";
 const safariApp = "com.apple.Safari";
 const firefoxApp = "org.mozilla.firefox";
 const firefoxNightlyApp = "org.mozilla.nightly";
+const playwrightFirefoxNightlyApp = "org.mozilla.nightlyunofficial";
 const operaApp = "com.operasoftware.Opera";
 const chromeApp = "com.google.Chrome";
 const chromeBetaApp = "com.google.Chrome.beta";
@@ -123,10 +124,15 @@ const getEntries = (): string[] => {
       (client) =>
         `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${firefoxApp}',NULL,NULL,${epoch}`,
     ),
-    // Permit Control Of Firefox Nightly And Playwright Firefox Nightly
+    // Permit Control Of Firefox Nightly
     ...standardClients.map(
       (client) =>
         `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${firefoxNightlyApp}',NULL,NULL,${epoch}`,
+    ),
+    // Permit Control Of Playwright Firefox Nightly
+    ...standardClients.map(
+      (client) =>
+        `'kTCCServiceAppleEvents','${client}',1,2,3,1,NULL,NULL,0,'${playwrightFirefoxNightlyApp}',NULL,NULL,${epoch}`,
     ),
     // Permit Control Of Opera
     ...standardClients.map(
