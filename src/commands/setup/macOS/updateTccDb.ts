@@ -275,9 +275,27 @@ export function getUserTccDbPath(): string {
 export async function updateTccDb(path: string): Promise<void> {
   const macOsMajor = getMacOsMajorVersion();
   const isSonomaOrNewer = macOsMajor >= 23;
+  const columns = [
+    "service",
+    "client",
+    "client_type",
+    "auth_value",
+    "auth_reason",
+    "auth_version",
+    "csreq",
+    "policy_id",
+    "indirect_object_identifier_type",
+    "indirect_object_identifier",
+    "indirect_object_code_identity",
+    "flags",
+    "last_modified",
+    ...(isSonomaOrNewer
+      ? ["pid", "pid_version", "boot_uuid", "last_reminded"]
+      : []),
+  ];
 
   for (const values of getEntries()) {
-    const query = `INSERT OR IGNORE INTO access VALUES(${values}${
+    const query = `INSERT OR IGNORE INTO access (${columns.join(",")}) VALUES(${values}${
       isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""
     });`;
 
