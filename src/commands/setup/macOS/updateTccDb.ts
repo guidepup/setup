@@ -189,12 +189,92 @@ const getEntries = (): string[] => {
 
 const TIMEOUT_BACKOFFS = [1000, 1000, 3000, 5000, 8000];
 
-export const USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
 export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
 
+const LEGACY_USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
+const PROTECTED_SYSTEM_PATH = "/private/var/containers/Data/ProtectedSystem";
+
+function getMacOsMajorVersion(): number {
+  const major = parseInt(release().split(".")[0], 10);
+
+  if (Number.isNaN(major)) {
+    throw new Error(`Unexpected macOS version: ${release()}`);
+  }
+
+  return major;
+}
+
+function execFileSyncAsRoot(
+  file: string,
+  args: string[],
+  options?: Parameters<typeof execFileSync>[2],
+): string {
+  return execFileSync("sudo", [file, ...args], {
+    ...options,
+    encoding: "utf8",
+  }) as string;
+}
+
+export function getUserTccDbPath(): string {
+  const macOsMajor = getMacOsMajorVersion();
+
+  if (macOsMajor < 27) {
+    return LEGACY_USER_PATH;
+  }
+
+  const databases = execFileSyncAsRoot("find", [
+    PROTECTED_SYSTEM_PATH,
+    "-mindepth",
+    "6",
+    "-maxdepth",
+    "6",
+    "-type",
+    "f",
+    "-path",
+    "*/Data/Library/Application Support/com.apple.TCC/TCC.db",
+    "-print",
+  ])
+    .trim()
+    .split("\n")
+    .filter(Boolean);
+
+  if (databases.length === 0) {
+    throw new Error("Unable to find a ProtectedSystem TCC database");
+  }
+
+  if (databases.length === 1) {
+    return databases[0];
+  }
+
+  const openFiles = execFileSyncAsRoot("lsof", ["-c", "tccd", "-Fn"])
+    .split("\n")
+    .filter((line) => line.startsWith("n"))
+    .map((line) => line.slice(1))
+    .filter(
+      (path) =>
+        path.startsWith(`${PROTECTED_SYSTEM_PATH}/`) &&
+        /\/com\.apple\.TCC\/TCC\.db$/.test(path),
+    );
+
+  const activeDatabases = databases.filter((database) =>
+    openFiles.includes(database),
+  );
+
+  if (activeDatabases.length !== 1) {
+    throw new Error(
+      [
+        "Unable to identify one active ProtectedSystem TCC database:",
+        ...databases.map((database) => `  ${database}`),
+      ].join("\n"),
+    );
+  }
+
+  return activeDatabases[0];
+}
+
 export async function updateTccDb(path: string): Promise<void> {
-  const osRelease = release();
-  const isSonomaOrNewer = parseInt(osRelease.split(".")[0], 10) >= 23;
+  const macOsMajor = getMacOsMajorVersion();
+  const isSonomaOrNewer = macOsMajor >= 23;
 
   for (const values of getEntries()) {
     const query = `INSERT OR IGNORE INTO access VALUES(${values}${
@@ -203,10 +283,12 @@ export async function updateTccDb(path: string): Promise<void> {
 
     for (let i = 0; i < TIMEOUT_BACKOFFS.length + 1; i++) {
       try {
-        execFileSync("sqlite3", [path, query], {
+        execFileSyncAsRoot("sqlite3", [path, query], {
           encoding: "utf8",
           stdio: "ignore",
         });
+
+        break;
       } catch (cause) {
         if (i === TIMEOUT_BACKOFFS.length) {
           throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
@@ -221,6 +303,6 @@ export async function updateTccDb(path: string): Promise<void> {
     }
   }
 
-  // 1s sleep to give cache for updates to propagate
+  // Give the TCC cache time to observe the database updates.
   await new Promise((resolve) => setTimeout(resolve, 1000));
 }
