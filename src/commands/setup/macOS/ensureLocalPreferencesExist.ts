@@ -28,48 +28,22 @@ function getPreferencesDirectory(): string {
   return join(homedir(), "Library", "Preferences");
 }
 
+const voiceOverAppPath = "/System/Library/CoreServices/VoiceOver.app";
+
+const voiceOverStarterPath = `${voiceOverAppPath}/Contents/MacOS/VoiceOverStarter`;
+
 async function startVoiceOver(): Promise<void> {
-  const voiceOverStarterPath =
-    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter";
-  const voiceOverPath =
-    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOver";
-  const voiceOverContentsPath =
-    "/System/Library/CoreServices/VoiceOver.app/Contents";
-
-  let voiceOverContentsListing: string;
-
-  try {
-    voiceOverContentsListing = execFileSync(
-      "ls",
-      ["-laR", voiceOverContentsPath],
-      {
-        encoding: "utf8",
-        timeout: 10000,
-        maxBuffer: 5 * 1024 * 1024,
-        stdio: ["ignore", "pipe", "ignore"],
-      },
-    ).trim();
-  } catch (cause) {
-    voiceOverContentsListing = `Listing failed: ${String(cause)}`;
+  if (platformMajorVersion() >= 27) {
+    execFileSync("/usr/bin/open", ["-a", voiceOverAppPath], {
+      stdio: "ignore",
+      timeout: 2000,
+    });
+  } else {
+    execSync(`${voiceOverStarterPath} &`, {
+      stdio: "ignore",
+      timeout: 2000,
+    });
   }
-
-  console.info(
-    "VoiceOver launch diagnostics:",
-    JSON.stringify(
-      {
-        darwinVersion: platformMajorVersion(),
-        legacyStarterPath: voiceOverStarterPath,
-        legacyStarterExists: existsSync(voiceOverStarterPath),
-        legacyVoiceOverPath: voiceOverPath,
-        legacyVoiceOverExists: existsSync(voiceOverPath),
-        voiceOverContentsListing,
-      },
-      null,
-      2,
-    ),
-  );
-
-  execSync(`${voiceOverStarterPath} &`, { stdio: "ignore", timeout: 2000 });
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 }
