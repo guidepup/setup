@@ -31,29 +31,22 @@ function getPreferencesDirectory(): string {
 async function startVoiceOver(): Promise<void> {
   const voiceOverStarterPath =
     "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter";
-  let matchingExecutables: string;
+  const voiceOverPath =
+    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOver";
 
-  try {
-    matchingExecutables = execFileSync(
-      "find",
-      [
-        "/System/Library",
-        "-type",
-        "f",
-        "(",
-        "-iname",
-        "*voiceover*",
-        "-o",
-        "-name",
-        "VoiceOverStarter",
-        ")",
-        "-print",
-      ],
-      { encoding: "utf8", timeout: 10000, stdio: ["ignore", "pipe", "ignore"] },
-    ).trim();
-  } catch (cause) {
-    matchingExecutables = `Search failed: ${String(cause)}`;
-  }
+  const spotlightResults = ["VoiceOverStarter", "VoiceOver"].map((name) => {
+    try {
+      const matches = execFileSync("mdfind", ["-name", name], {
+        encoding: "utf8",
+        timeout: 5000,
+        stdio: ["ignore", "pipe", "ignore"],
+      }).trim();
+
+      return `${name}: ${matches || "no matches"}`;
+    } catch (cause) {
+      return `${name}: search failed: ${String(cause)}`;
+    }
+  });
 
   console.info(
     "VoiceOver launch diagnostics:",
@@ -62,7 +55,9 @@ async function startVoiceOver(): Promise<void> {
         darwinVersion: platformMajorVersion(),
         legacyStarterPath: voiceOverStarterPath,
         legacyStarterExists: existsSync(voiceOverStarterPath),
-        matchingExecutables,
+        legacyVoiceOverPath: voiceOverPath,
+        legacyVoiceOverExists: existsSync(voiceOverPath),
+        spotlightResults,
       },
       null,
       2,
