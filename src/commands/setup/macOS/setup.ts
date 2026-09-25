@@ -5,7 +5,7 @@ import { disableSplashScreenSystemDefaults } from "./disableSplashScreenSystemDe
 import { disableDictationInputAutoEnable } from "./disableDictationInputAutoEnable";
 import { isSipEnabled } from "./isSipEnabled";
 import { writeDatabaseFile } from "./writeDatabaseFile";
-import { SYSTEM_PATH, USER_PATH, updateTccDb } from "./updateTccDb";
+import { getUserTccDbPath, SYSTEM_PATH, updateTccDb } from "./updateTccDb";
 import { isAppleScriptControlEnabled } from "./isAppleScriptControlEnabled";
 import { handleNote, handleWarning } from "../../../logging";
 import { ERR_SETUP_MACOS_REQUIRES_MANUAL_USER_INTERACTION } from "../../../errors";
@@ -27,7 +27,7 @@ export async function setup({
 }: MacOSSetupOptions = {}): Promise<void> {
   if (!macosIgnoreTccDb) {
     try {
-      await updateTccDb(USER_PATH);
+      await updateTccDb(getUserTccDbPath());
     } catch (e) {
       if (ci) {
         throw e;

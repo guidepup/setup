@@ -1,6 +1,6 @@
 {
   "name": "@guidepup/setup",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "description": "CLI for configuring environments and install screen reader assets for Guidepup.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -27,12 +27,11 @@
   ],
   "scripts": {
     "build": "yarn clean && yarn compile",
-    "ci": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start:setup --ci --macos-record",
-    "ci:ignore-tcc-db": "yarn clean && yarn lint && yarn build && yarn resolutionFix && yarn start:setup --ci --macos-record --macos-ignore-tcc-db",
+    "ci": "yarn clean && yarn lint && yarn build && yarn start:setup --ci --macos-record",
+    "ci:ignore-tcc-db": "yarn clean && yarn lint && yarn build && yarn start:setup --ci --macos-record --macos-ignore-tcc-db",
     "clean": "rimraf lib",
     "compile": "tsc",
     "dev": "ts-node ./src/index.ts",
-    "resolutionFix": "ts-node ./.github/workflows/resolutionFix.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "yarn lint --fix",
     "start:setup": "node ./bin/guidepup setup",
