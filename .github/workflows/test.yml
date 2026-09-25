@@ -14,17 +14,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [
-            # macos-15,
-            # macos-15-intel,
-            # macos-26,
-            # macos-26-intel,
+        os:
+          [
+            macos-15,
+            macos-15-intel,
+            macos-26,
+            macos-26-intel,
             xcode-27,
-            # windows-2022,
-            # windows-2025,
-            # windows-11-arm,
-            # ubuntu-26.04,
-            # ubuntu-26.04-arm,
+            windows-2022,
+            windows-2025,
+            windows-11-arm,
+            ubuntu-26.04,
+            ubuntu-26.04-arm,
           ]
     steps:
       - uses: actions/checkout@v6
@@ -89,17 +90,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [
-            # macos-15,
-            # macos-15-intel,
-            # macos-26,
-            # macos-26-intel,
+        os:
+          [
+            macos-15,
+            macos-15-intel,
+            macos-26,
+            macos-26-intel,
             xcode-27,
-            # windows-2022,
-            # windows-2025,
-            # windows-11-arm,
-            # ubuntu-26.04,
-            # ubuntu-26.04-arm,
+            windows-2022,
+            windows-2025,
+            windows-11-arm,
+            ubuntu-26.04,
+            ubuntu-26.04-arm,
           ]
     steps:
       - uses: actions/checkout@v6
