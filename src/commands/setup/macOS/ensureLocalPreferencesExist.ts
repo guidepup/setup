@@ -33,20 +33,25 @@ async function startVoiceOver(): Promise<void> {
     "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter";
   const voiceOverPath =
     "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOver";
+  const voiceOverContentsPath =
+    "/System/Library/CoreServices/VoiceOver.app/Contents";
 
-  const spotlightResults = ["VoiceOverStarter", "VoiceOver"].map((name) => {
-    try {
-      const matches = execFileSync("mdfind", ["-name", name], {
+  let voiceOverContentsListing: string;
+
+  try {
+    voiceOverContentsListing = execFileSync(
+      "ls",
+      ["-laR", voiceOverContentsPath],
+      {
         encoding: "utf8",
-        timeout: 5000,
+        timeout: 10000,
+        maxBuffer: 5 * 1024 * 1024,
         stdio: ["ignore", "pipe", "ignore"],
-      }).trim();
-
-      return `${name}: ${matches || "no matches"}`;
-    } catch (cause) {
-      return `${name}: search failed: ${String(cause)}`;
-    }
-  });
+      },
+    ).trim();
+  } catch (cause) {
+    voiceOverContentsListing = `Listing failed: ${String(cause)}`;
+  }
 
   console.info(
     "VoiceOver launch diagnostics:",
@@ -57,7 +62,7 @@ async function startVoiceOver(): Promise<void> {
         legacyStarterExists: existsSync(voiceOverStarterPath),
         legacyVoiceOverPath: voiceOverPath,
         legacyVoiceOverExists: existsSync(voiceOverPath),
-        spotlightResults,
+        voiceOverContentsListing,
       },
       null,
       2,
