@@ -32,52 +32,14 @@ const voiceOverAppPath = "/System/Library/CoreServices/VoiceOver.app";
 
 const voiceOverStarterPath = `${voiceOverAppPath}/Contents/MacOS/VoiceOverStarter`;
 
-function logVoiceOverProcesses(phase: string): void {
-  const captureMatchingLines = (file: string, args: string[]): string => {
-    try {
-      const output = execFileSync(file, args, {
-        encoding: "utf8",
-        timeout: 2000,
-        stdio: ["ignore", "pipe", "ignore"],
-      });
-      const matchingLines = output
-        .split("\n")
-        .filter((line) => /voiceover/i.test(line));
-
-      return matchingLines.join("\n") || "No VoiceOver matches";
-    } catch (cause) {
-      return `Query failed: ${String(cause)}`;
-    }
-  };
-
-  console.log(
-    "VoiceOver process diagnostics:",
-    JSON.stringify(
-      {
-        darwinVersion: platformMajorVersion(),
-        phase,
-        processes: captureMatchingLines("ps", [
-          "-axo",
-          "pid=,ppid=,comm=,args=",
-        ]),
-        launchdServices: captureMatchingLines("launchctl", ["list"]),
-      },
-      null,
-      2,
-    ),
-  );
-}
-
 async function startVoiceOver(): Promise<void> {
   const darwinMajorVersion = platformMajorVersion();
 
   if (darwinMajorVersion >= 27) {
-    logVoiceOverProcesses("before open");
     execFileSync("/usr/bin/open", ["-a", voiceOverAppPath], {
       stdio: "ignore",
       timeout: 2000,
     });
-    logVoiceOverProcesses("after open");
   } else {
     execSync(`${voiceOverStarterPath} &`, {
       stdio: "ignore",
@@ -86,10 +48,6 @@ async function startVoiceOver(): Promise<void> {
   }
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  if (darwinMajorVersion >= 27) {
-    logVoiceOverProcesses("after startup wait");
-  }
 }
 
 function isRunning(): boolean {
