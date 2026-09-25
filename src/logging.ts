@@ -37,7 +37,8 @@ export function handleSetupComplete(): never {
 }
 
 export function handleSetupManualRequired(): void {
-  logInfo(
+  handleNote(
+    "Manual setup required",
     "Please complete remaining setup by following this guide:\n\n--> " +
       chalk.underline(
         chalk.bold(
