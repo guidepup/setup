@@ -29,10 +29,47 @@ function getPreferencesDirectory(): string {
 }
 
 async function startVoiceOver(): Promise<void> {
-  execSync(
-    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter &",
-    { stdio: "ignore", timeout: 2000 },
+  const voiceOverStarterPath =
+    "/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter";
+  let matchingExecutables: string;
+
+  try {
+    matchingExecutables = execFileSync(
+      "find",
+      [
+        "/System/Library",
+        "-type",
+        "f",
+        "(",
+        "-iname",
+        "*voiceover*",
+        "-o",
+        "-name",
+        "VoiceOverStarter",
+        ")",
+        "-print",
+      ],
+      { encoding: "utf8", timeout: 10000, stdio: ["ignore", "pipe", "ignore"] },
+    ).trim();
+  } catch (cause) {
+    matchingExecutables = `Search failed: ${String(cause)}`;
+  }
+
+  console.info(
+    "VoiceOver launch diagnostics:",
+    JSON.stringify(
+      {
+        darwinVersion: platformMajorVersion(),
+        legacyStarterPath: voiceOverStarterPath,
+        legacyStarterExists: existsSync(voiceOverStarterPath),
+        matchingExecutables,
+      },
+      null,
+      2,
+    ),
   );
+
+  execSync(`${voiceOverStarterPath} &`, { stdio: "ignore", timeout: 2000 });
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 }
