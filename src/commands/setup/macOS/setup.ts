@@ -54,7 +54,7 @@ export async function setup({
   const osName = platform();
   const osVersion = release();
 
-  let stopRecording: () => void = () => null;
+  let stopRecording: () => Promise<void> = () => Promise.resolve(null);
 
   if (macosRecord) {
     try {
@@ -104,6 +104,6 @@ export async function setup({
 
     await waitForAppleScriptControl();
   } finally {
-    stopRecording();
+    await stopRecording?.();
   }
 }
