@@ -8,6 +8,7 @@ const sshdPath = "/usr/sbin/sshd";
 const bashPath = "/bin/bash";
 const zshPath = "/bin/zsh";
 const oascriptPath = "/usr/bin/osascript";
+const screencapturePath = "/usr/sbin/screencapture";
 const githubRunProvisionerScriptPath =
   "/usr/local/opt/runner/runprovisioner.sh";
 const githubProvisionerPath = "/usr/local/opt/runner/provisioner/provisioner";
@@ -59,6 +60,7 @@ const getEntries = (): string[] => {
     gitlabRunnerPath,
     circleciRunnerPath,
   ];
+  const recordingClients = [...standardClients, screencapturePath];
 
   /**
    * See https://www.rainforestqa.com/blog/macos-tcc-db-deep-dive for details on TCC.db entries.
@@ -80,12 +82,12 @@ const getEntries = (): string[] => {
         `'kTCCServiceSystemPolicyAllFiles','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
     ),
     // Permit Access To Microphone
-    ...standardClients.map(
+    ...recordingClients.map(
       (client) =>
         `'kTCCServiceMicrophone','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,NULL,${epoch}`,
     ),
     // Permit Capture Of System Display
-    ...standardClients.map(
+    ...recordingClients.map(
       (client) =>
         `'kTCCServiceScreenCapture','${client}',1,2,3,1,NULL,NULL,NULL,'UNUSED',NULL,0,${epoch}`,
     ),
