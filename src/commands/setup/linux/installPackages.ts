@@ -14,6 +14,7 @@ const LINUX_PACKAGES = [
   "orca",
   "pulseaudio",
   "x11-utils",
+  "xauth",
   "xdotool",
   "xvfb",
 ] as const;
