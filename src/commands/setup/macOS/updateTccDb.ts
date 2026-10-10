@@ -2,6 +2,15 @@ import { homedir, release } from "os";
 import { execSync, execFileSync } from "child_process";
 import { ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB } from "../../../errors";
 
+const TIMEOUT_BACKOFFS = [1000, 1000, 3000, 5000, 8000];
+const SHORT_COMMAND_TIMEOUT_MS = 5_000;
+const LONG_COMMAND_TIMEOUT_MS = 30_000;
+
+export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
+
+const LEGACY_USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
+const PROTECTED_SYSTEM_PATH = "/private/var/containers/Data/ProtectedSystem";
+
 const epoch = Math.floor(Date.now() / 1000);
 
 const sshdPath = "/usr/sbin/sshd";
@@ -42,6 +51,7 @@ const getEntries = (): string[] => {
   try {
     gitlabRunnerPath = execSync("which gitlab-runner", {
       encoding: "utf8",
+      timeout: SHORT_COMMAND_TIMEOUT_MS,
     }).trim();
   } catch {
     gitlabRunnerPath = "/usr/local/bin/gitlab-runner";
@@ -189,13 +199,6 @@ const getEntries = (): string[] => {
   ];
 };
 
-const TIMEOUT_BACKOFFS = [1000, 1000, 3000, 5000, 8000];
-
-export const SYSTEM_PATH = "/Library/Application Support/com.apple.TCC/TCC.db";
-
-const LEGACY_USER_PATH = `${homedir()}/Library/Application Support/com.apple.TCC/TCC.db`;
-const PROTECTED_SYSTEM_PATH = "/private/var/containers/Data/ProtectedSystem";
-
 function getMacOsMajorVersion(): number {
   const major = parseInt(release().split(".")[0], 10);
 
@@ -211,7 +214,8 @@ function execFileSyncAsRoot(
   args: string[],
   options?: Parameters<typeof execFileSync>[2],
 ): string {
-  return execFileSync("sudo", [file, ...args], {
+  return execFileSync("sudo", ["-n", file, ...args], {
+    timeout: LONG_COMMAND_TIMEOUT_MS,
     ...options,
     encoding: "utf8",
   }) as string;
@@ -306,6 +310,7 @@ export async function updateTccDb(path: string): Promise<void> {
         execFileSyncAsRoot("sqlite3", [path, query], {
           encoding: "utf8",
           stdio: "ignore",
+          timeout: SHORT_COMMAND_TIMEOUT_MS,
         });
 
         break;

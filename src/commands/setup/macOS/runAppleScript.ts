@@ -1,6 +1,6 @@
 import { execFile } from "child_process";
 
-export const DEFAULT_TIMEOUT = 120;
+export const DEFAULT_TIMEOUT = ;
 export const DEFAULT_MAX_BUFFER = 1000 * 1000 * 100;
 
 export async function runAppleScript<T = string | void>(
@@ -37,6 +37,7 @@ end withTimeout
       [],
       {
         maxBuffer: DEFAULT_MAX_BUFFER,
+        timeout: (timeout + 5) * 1000,
       },
       (error, stdout) => {
         if (error) {
