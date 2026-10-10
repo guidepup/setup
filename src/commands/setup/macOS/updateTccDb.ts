@@ -300,31 +300,49 @@ export async function updateTccDb(path: string): Promise<void> {
       : []),
   ];
 
-  for (const values of getEntries()) {
-    const query = `INSERT OR IGNORE INTO access (${columns.join(",")}) VALUES(${values}${
-      isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""
-    });`;
+  const rows = getEntries().map(
+    (values) =>
+      `(${values}${isSonomaOrNewer ? `,NULL,NULL,'UNUSED',${epoch}` : ""})`,
+  );
+  const updatedColumns = [
+    "auth_value",
+    "auth_reason",
+    "auth_version",
+    "flags",
+    "last_modified",
+    ...(isSonomaOrNewer
+      ? ["pid", "pid_version", "boot_uuid", "last_reminded"]
+      : []),
+  ];
+  const query = [
+    "BEGIN IMMEDIATE;",
+    `INSERT INTO access (${columns.join(",")}) VALUES ${rows.join(
+      ",",
+    )} ON CONFLICT DO UPDATE SET ${updatedColumns
+      .map((column) => `${column}=excluded.${column}`)
+      .join(",")};`,
+    "COMMIT;",
+  ].join("\n");
 
-    for (let i = 0; i < TIMEOUT_BACKOFFS.length + 1; i++) {
-      try {
-        execFileSyncAsRoot("sqlite3", [path, query], {
-          encoding: "utf8",
-          stdio: "ignore",
-          timeout: SHORT_COMMAND_TIMEOUT_MS,
+  for (let i = 0; i < TIMEOUT_BACKOFFS.length + 1; i++) {
+    try {
+      execFileSyncAsRoot("sqlite3", ["-bail", path, query], {
+        encoding: "utf8",
+        stdio: "ignore",
+        timeout: SHORT_COMMAND_TIMEOUT_MS,
+      });
+
+      break;
+    } catch (cause) {
+      if (i === TIMEOUT_BACKOFFS.length) {
+        throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
+          cause,
         });
-
-        break;
-      } catch (cause) {
-        if (i === TIMEOUT_BACKOFFS.length) {
-          throw new Error(ERR_SETUP_MACOS_UNABLE_TO_WRITE_USER_TCC_DB, {
-            cause,
-          });
-        }
-
-        await new Promise((resolve) =>
-          setTimeout(resolve, TIMEOUT_BACKOFFS[i]),
-        );
       }
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, TIMEOUT_BACKOFFS[i]),
+      );
     }
   }
 
