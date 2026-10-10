@@ -51,10 +51,10 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
-"@guidepup/record@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/@guidepup/record/-/record-0.2.0.tgz#023dd71ef5f6eb23daf9f59f45b9c0030d6c4128"
-  integrity sha512-wmSbuomWYNvAghgH+MlSdMkkXvSW44SvMA+D0XdMXzI6iTgMbpb4iijUtIF8moiX+wl0SbeNGsY0sXqxQm6nyQ==
+"@guidepup/record@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.npmjs.org/@guidepup/record/-/record-0.3.0.tgz#0bf0861d12da27592b0032d04efbb44fad3234f4"
+  integrity sha512-0PyoVl9yt/k34oYCWoo3WUKy452zsJDrz1xOq0SKeQM0RDD8M1emTRNEjuFU7+/BpZHisWaNXRRGIrnGvEkizg==
   dependencies:
     ffmpeg-static "^5.2.0"
 
