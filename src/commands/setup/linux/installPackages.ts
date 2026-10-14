@@ -13,6 +13,7 @@ const LINUX_PACKAGES = [
   "libglib2.0-bin",
   "orca",
   "pulseaudio",
+  "python3-dasbus",
   "x11-utils",
   "xauth",
   "xdotool",
