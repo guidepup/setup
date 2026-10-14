@@ -15,7 +15,7 @@
 [![Ubuntu Resolute Support](https://img.shields.io/badge/ubuntu-26.04%2B-blue.svg?logo=ubuntu)](https://releases.ubuntu.com/resolute/)
 [![Debian Trixie Support](https://img.shields.io/badge/debian-13%2B-blue.svg?logo=debian)](https://www.debian.org/releases/trixie/)
 
-The `@guidepup/setup` CLI enables automation for <b>Orca on Linux</b>, <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a>, and <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>.
+The `@guidepup/setup` CLI enables automation for <a href="https://www.guidepup.dev/docs/api/class-nvda"><b>NVDA on Windows</b></a>, <a href="https://www.guidepup.dev/docs/api/class-orca"><b>Orca on Linux</b></a>, and <a href="https://www.guidepup.dev/docs/api/class-voiceover"><b>VoiceOver on macOS</b></a>.
 
 ## Quick start
 
