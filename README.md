@@ -150,10 +150,11 @@ guidepup install
 
 ## Powerful tooling
 
-Check out some of the other Guidepup modules:
+Check out some of the other Guidepup tooling:
 
 - [`@guidepup/guidepup`](https://github.com/guidepup/guidepup/) - Reliable automation for your screen reader a11y workflows through JavaScript supporting VoiceOver and NVDA.
 - [`@guidepup/playwright`](https://github.com/guidepup/guidepup-playwright/) - Seamless integration of Guidepup with Playwright.
+- [`ghcr.io/guidepup/guidepup`](https://github.com/guidepup/guidepup-docker/pkgs/container/guidepup) - Seemless integration of Guidepup in Docker.
 - [`@guidepup/virtual-screen-reader`](https://github.com/guidepup/virtual-screen-reader/) - Reliable unit testing for your screen reader a11y workflows.
 - [`@guidepup/jest`](https://github.com/guidepup/jest/) - Jest matchers for reliable unit testing of your screen reader a11y workflows.
 
